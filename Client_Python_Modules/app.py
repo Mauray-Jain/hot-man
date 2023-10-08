@@ -113,4 +113,9 @@ class App(tk.Tk):
             text='sign in',
             command=lambda self=self, num=phoneNumber, pwd=password: self.validateSignIn(num, pwd)
         ).pack()
+        ttk.Button(
+            master=signIn,
+            text='use otp',
+            command=lambda: self.switch(4)
+        ).pack()
         return signIn
