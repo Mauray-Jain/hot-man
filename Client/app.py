@@ -1,7 +1,7 @@
 import tkinter
-
-from Client_Python_Modules.page import *
-
+from socket import socket
+from Client.page import *
+from Middle.api import send
 
 class App(tk.Tk):
     height: int = 720
@@ -10,8 +10,9 @@ class App(tk.Tk):
     # iconPath = 'Images/favicon.ico'
     pages: list
     pageCreatorPrototypes: dict
+    sock: socket
 
-    def __init__(self):
+    def __init__(self, s):
         super().__init__()
         self.pageCreatorPrototypes = {
             0: self.makeStartPage,
@@ -25,6 +26,7 @@ class App(tk.Tk):
         # self.iconbitmap(self.iconPath)
         self.createPage(0)
         self.pages[self.curPage].pack()
+        self.sock = s
 
     def switch(self, pageNo: int, popup: bool = False) -> None:
         if popup:
@@ -53,7 +55,9 @@ class App(tk.Tk):
         print('if fine: switch, else : popup(message)')
 
     def sendOtp(self, number):
-        print('send otp to', number.get())
+        num: int  = number.get()
+        print('send otp to', num)
+        send(self.sock, {"type": "otp", "num": num})
 
     def createPage(self, pageNo: int = 0):
         self.pages[pageNo] = self.pageCreatorPrototypes[pageNo]()
