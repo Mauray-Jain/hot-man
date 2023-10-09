@@ -15,7 +15,8 @@ class App(tk.Tk):
         super().__init__()
         self.pageCreatorPrototypes = {
             0: self.makeStartPage,
-            1: self.makeSignIn
+            1: self.makeSignIn,
+            2: self.makeSignUp
         }
         self.title('Restaurant management system')
         self.geometry(str(self.width) + 'x' + str(self.height))
@@ -34,9 +35,9 @@ class App(tk.Tk):
             print('switching to', pageNo)
         self.pages[self.curPage].pack_forget()
         self.curPage = pageNo
-        try:
-            self.pages[self.curPage].pack()
-        except AttributeError:
+        if self.pages[self.curPage] != None:
+            self.pages[self.curPage].pack() #this is in try
+        else:
             self.createPage(pageNo)
             self.pages[self.curPage].pack()
 
@@ -50,6 +51,9 @@ class App(tk.Tk):
         print('checking credentials ....')
         print(number.get(), '\t:\t', passwd.get())
         print('if fine: switch, else : popup(message)')
+
+    def sendOtp(self, number):
+        print('send otp to', number.get())
 
     def createPage(self, pageNo: int = 0):
         self.pages[pageNo] = self.pageCreatorPrototypes[pageNo]()
@@ -119,3 +123,62 @@ class App(tk.Tk):
             command=lambda: self.switch(4)
         ).pack()
         return signIn
+
+    def makeSignUp(self) -> Page:
+        signUp = Page(self, 'signUp')
+        ttk.Button(
+            master=signUp,
+            text='back',
+            command=lambda: self.switch(0)
+        ).pack()
+        name = tkinter.StringVar()
+        ttk.Label(
+            master=signUp,
+            text='Name'
+        ).pack()
+        ttk.Entry(
+            master=signUp,
+            textvariable=name
+        ).pack()
+        phoneNumber = tkinter.IntVar()
+        ttk.Label(
+            master=signUp,
+            text='phoneNumber'
+        ).pack()
+        ttk.Entry(
+            master=signUp,
+            textvariable=phoneNumber
+        ).pack()
+        password = tkinter.StringVar()
+        ttk.Label(
+            master=signUp,
+            text='Password'
+        ).pack()
+        ttk.Entry(
+            master=signUp,
+            textvariable=password
+        ).pack()
+        confirnPassword = tkinter.StringVar()
+        ttk.Label(
+            master=signUp,
+            text='confirnPassword'
+        ).pack()
+        ttk.Entry(
+            master=signUp,
+            textvariable=confirnPassword
+        ).pack()
+        otp = tkinter.IntVar()
+        ttk.Button(
+            master=signUp,
+            text='(re)send otp',
+            command=lambda num=phoneNumber,calable=self: calable.sendOtp(num)
+        ).pack()
+        ttk.Label(
+            master=signUp,
+            text='otp'
+        ).pack()
+        ttk.Entry(
+            master=signUp,
+            textvariable=otp
+        ).pack()
+        return signUp
