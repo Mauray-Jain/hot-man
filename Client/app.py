@@ -57,7 +57,7 @@ class App(tk.Tk):
     def sendOtp(self, number):
         num: int  = number.get()
         print('send otp to', num)
-        send(self.sock, {"type": "otp", "num": num})
+        send(self.sock, {"type": "Otp", "number": num})
 
     def createPage(self, pageNo: int = 0):
         self.pages[pageNo] = self.pageCreatorPrototypes[pageNo]()

@@ -16,4 +16,11 @@ Client to server ones are:
 - DBFailed: operation errored in this case rollback to previous version
 
 ## Protocol
-On success returns a nested list (to be determined)
+req: 
+- type -> Otp | Database
+- if Otp: number -> int
+- if Database:
+- query -> {"type": "C | R | U | D", "item": , "content": }
+
+res:
+- type -> Invalid | Success

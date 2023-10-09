@@ -9,6 +9,8 @@ def send(s: socket.socket, obj: dict) -> None:
 def recv(s: socket.socket) -> dict | int:
     obj = s.recv(1024)
     if not obj:
-        return -1
+        return 0
     objParsed = json.loads(obj.decode())
+    if objParsed["type"] == "Close":
+        return -1
     return objParsed
