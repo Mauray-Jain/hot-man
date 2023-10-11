@@ -14,7 +14,7 @@ if __name__ == '__main__':
         print("Server Not working")
         exit(1)
 
-    app = App()
+    app = App(s)
     app.mainloop()
 
     s.close()
