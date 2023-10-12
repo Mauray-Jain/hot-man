@@ -23,4 +23,21 @@ req:
 - query -> {"type": "C | R | U | D", "item": , "content": }
 
 res:
-- type -> Invalid | Success
+- status -> Invalid | Success
+
+
+
+send:
+	tableNo
+	
+ask:
+menu -> list of list of lists
+		category -> item -> [name, price, picure, description]
+cart -> list of lists, full
+		item -> [name, quantity, price]
+        list -> [total : price, taxes : L]
+
+
+stuff to do:
+  remove guest
+  ;
