@@ -32,12 +32,12 @@ send:
 	
 ask:
 menu -> list of list of lists
-		category -> item -> [name, price, picure, description]
+-		category -> item -> [name, price, picure, description]
 cart -> list of lists, full
-		item -> [name, quantity, price]
-        list -> [total : price, taxes : L]
+-	item -> [name, quantity, price]
+-       list -> [total : price, taxes : L]
 
 
 stuff to do:
-  remove guest
+-  remove guest
   ;
