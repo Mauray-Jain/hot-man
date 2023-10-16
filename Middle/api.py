@@ -6,7 +6,7 @@ def send(s: socket.socket, obj: dict) -> None:
     s.sendall(objParsed.encode())
     
 
-def recv(s: socket.socket) -> dict | int:
+def recv(s: socket.socket):
     obj = s.recv(1024)
     if not obj:
         return 0
