@@ -1,19 +1,21 @@
-def handle(req: dict, db = None) -> None | int:
-    match req["type"]:
-        case "Otp":
-            return handleOtp(req["number"])
-        case "Database":
-            return handleDB(db, req["query"])
-        case _:
-            return -1
+def handle(req: dict, db = None) -> any:
+    x = req["type"]
+    if x == "Otp":
+        return handleOtp(req["number"])
+    elif x == "Database":
+        return handleDB(db, req["query"])
+    else:
+        return -1
+
+def handleDB(db, req: dict):
+    x =  req["type"]
+    if x:
+        pass
+    else:
+        return -1
 
 def handleOtp(number: int):
     pass
-
-def handleDB(db, req: dict):
-    match req["type"]:
-        case _:
-            return -1
 
 def dbCreate(db, req: dict):
     pass
