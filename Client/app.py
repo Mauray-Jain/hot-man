@@ -8,7 +8,7 @@ class App(tk.Tk):
     height: int = 720
     width: int = 1080
     curPage: int = 0
-    # iconPath = 'Images/favicon.ico'
+    # iconPath = './../Images/favicon.ico'
     pages: list
     pageCreatorPrototypes: dict
     sock: socket
@@ -18,20 +18,26 @@ class App(tk.Tk):
         super().__init__()
         self.pageCreatorPrototypes = {
             0: self.makeStartPage,
-            1: self.makeSignIn,
+            # 11: self.makeSignIn,                    # depreciated
             2: self.makeSignUp,
-            11: self.makeSignInOtp,
+            1: self.makeSignInOtp,
             21: self.makeMenu,
             22: self.makeCart
         }
         self.title('Restaurant management system')
         self.geometry(str(self.width) + 'x' + str(self.height))
         self.resizable(False, False)
+        self.getStyle()
         self.pages = [None] * 100
         # self.iconbitmap(self.iconPath)
         self.createPage(0)
         self.pages[self.curPage].pack()
-        # self.sock = s
+        self.sock = s
+
+    def getStyle(self)->ttk.Style:
+        st = ttk.Style()
+        st.configure('mainPage.TButton', font=('Times New Roman', 24))
+        return st
 
     def switch(self,
                pageNo: int,
@@ -79,40 +85,48 @@ class App(tk.Tk):
 
     def makeStartPage(self) -> Page:
         startPage = Page(self, 'start page')
-        ttk.Label(master=startPage, text='Name_Of_Restaurant').pack()
-        ttk.Button(master=startPage,
-                   text='signInOtpDirect',
-                   command=lambda: self.switch(11)).pack()
-        ttk.Button(master=startPage,
-                   text='Sign in',
-                   command=lambda: self.switch(1)).pack()
-        ttk.Button(master=startPage,
-                   text='sign up',
-                   command=lambda: self.switch(2)).pack()
-        ttk.Button(master=startPage, text='Staff',
-                   command=self.staffLogin).pack()
-        ttk.Button(master=startPage,
-                   text='guest',
-                   command=lambda: self.switch(1, True)).pack()
+        restName = ttk.Label(master=startPage, text='Name_Of_Restaurant')
+        restName.config(font=('Comic Sans MS', 64, 'italic'))
+        restName.pack(
+                   anchor=tk.CENTER,
+                   padx=20,
+                   pady=80)
+        button_font = ('Comic Sans MS', 32, 'bold')
+        but1 = ttk.Button(master=startPage,
+                   text='Sign In',
+                   style='mainPage.TButton',
+                   command=lambda: self.switch(1)
+                ).pack(
+                   anchor=tk.CENTER,
+                   padx=20,
+                   pady=10)
+        but2 = ttk.Button(master=startPage,
+                   text='Sign Up',
+                   style='mainPage.TButton',
+                   command=lambda: self.switch(2)
+                ).pack(
+                   anchor=tk.CENTER,
+                   padx=20,
+                   pady=10)
         return startPage
 
-    def makeSignIn(self) -> Page:
-        pageObj = Page(self, 'sign in')
-        ttk.Button(master=pageObj, text='back', command=self.goBack).pack()
-        ttk.Label(master=pageObj, text='Number').pack()
-        phoneNumber = tkinter.StringVar()
-        ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()
-        ttk.Label(master=pageObj, text='Password').pack()
-        password = tkinter.StringVar()
-        ttk.Entry(master=pageObj, textvariable=password, show='*').pack()
-        ttk.Button(master=pageObj,
-                   text='sign in',
-                   command=lambda self=self, num=phoneNumber, pwd=password:
-                   self.validateSignIn(num, pwd)).pack()
-        ttk.Button(master=pageObj,
-                   text='use otp',
-                   command=lambda: self.switch(4)).pack()
-        return pageObj
+    # def makeSignIn(self) -> Page:
+    #     pageObj = Page(self, 'sign in')
+    #     ttk.Button(master=pageObj, text='back', command=self.goBack).pack()
+    #     ttk.Label(master=pageObj, text='Number').pack()
+    #     phoneNumber = tkinter.StringVar()
+    #     ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()                                REMOVED
+    #     ttk.Label(master=pageObj, text='Password').pack()
+    #     password = tkinter.StringVar()
+    #     ttk.Entry(master=pageObj, textvariable=password, show='*').pack()
+    #     ttk.Button(master=pageObj,
+    #                text='sign in',
+    #                command=lambda self=self, num=phoneNumber, pwd=password:
+    #                self.validateSignIn(num, pwd)).pack()
+    #     ttk.Button(master=pageObj,
+    #                text='use otp',
+    #                command=lambda: self.switch(4)).pack()
+    #     return pageObj
 
     def makeSignUp(self) -> Page:
         pageObj = Page(self, 'pageObj')
@@ -140,7 +154,7 @@ class App(tk.Tk):
 
     def makeSignInOtp(self) -> Page:
         pageObj = Page(self, 'sign in')
-        ttk.Button(master=pageObj, text='back', command=self.goBack).pack()
+        ttk.Button(master=pageObj, text='back', command=self.goBack, style='mainPage.TButton').pack(ipadx=0,ipady=0,anchor=tk.W, expand=True)
         ttk.Label(master=pageObj, text='Number').pack()
         phoneNumber = tkinter.StringVar()
         ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()
@@ -149,6 +163,7 @@ class App(tk.Tk):
         ttk.Entry(master=pageObj, textvariable=otp).pack()
         ttk.Button(master=pageObj,
                    text='sign in',
+                   style='mainPage.TButton',
                    command=lambda self=self, num=phoneNumber, pwd=otp: self.
                    validateSignIn(num, pwd)).pack()
         return pageObj
