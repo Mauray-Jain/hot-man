@@ -31,12 +31,14 @@ class App(tk.Tk):
         self.pages = [None] * 100
         # self.iconbitmap(self.iconPath)
         self.createPage(0)
-        self.pages[self.curPage].pack()
+        self.pages[self.curPage].pack(ipadx=self.width,ipady=self.height)
         self.sock = s
 
     def getStyle(self)->ttk.Style:
         st = ttk.Style()
         st.configure('mainPage.TButton', font=('Times New Roman', 24))
+        st.configure('h0.TEntry', font=('Times New Roman', 24))
+        st.configure('h0.TLabel', font=('Times New Roman', 24))
         return st
 
     def switch(self,
@@ -54,11 +56,9 @@ class App(tk.Tk):
         # self.back.append(self.curPage)
         self.pages[self.curPage].pack_forget()
         self.curPage = pageNo
-        if self.pages[self.curPage] != None:
-            self.pages[self.curPage].pack()  #this is in try
-        else:
+        if self.pages[self.curPage] == None:
             self.createPage(pageNo)
-            self.pages[self.curPage].pack()
+        self.pages[self.curPage].pack(ipadx=self.width,ipady=self.height)
 
     def openPopup(self, popupno: int) -> None:
         pass
@@ -130,7 +130,10 @@ class App(tk.Tk):
 
     def makeSignUp(self) -> Page:
         pageObj = Page(self, 'pageObj')
-        ttk.Button(master=pageObj, text='back', command=self.goBack).pack()
+        ttk.Button(
+            master=pageObj,
+            text='back',
+            command=self.goBack).pack()
         name = tkinter.StringVar()
         ttk.Label(master=pageObj, text='Name').pack()
         ttk.Entry(master=pageObj, textvariable=name).pack()
@@ -154,38 +157,98 @@ class App(tk.Tk):
 
     def makeSignInOtp(self) -> Page:
         pageObj = Page(self, 'sign in')
-        ttk.Button(master=pageObj, text='back', command=self.goBack, style='mainPage.TButton').pack(ipadx=0,ipady=0,anchor=tk.W, expand=True)
-        ttk.Label(master=pageObj, text='Number').pack()
+        ttk.Button(
+                   master=pageObj,
+                   text='back',
+                   command=self.goBack,
+                   style='mainPage.TButton'
+##        ).pack(
+##                   padx=0,
+##                   pady=0,
+##                   anchor=tk.W,
+##                   expand=True)
+          ).place(x=0,y=0)
+        ttk.Frame(master=pageObj).pack(pady=40,padx=720)
+        ttk.Label(
+                   master=pageObj,
+                   text='Number',
+                   style='h0.TLabel'
+        ).pack(
+               padx=20,
+               pady=15,
+               expand=True
+        )
         phoneNumber = tkinter.StringVar()
-        ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()
-        ttk.Label(master=pageObj, text='otp').pack()
+        ttk.Entry(master=pageObj, textvariable=phoneNumber, style='h0.TEntry').pack(
+               ipady=5,
+               ipadx=60,
+               padx=20,
+               pady=15,
+               expand=True)
+        ttk.Label(
+                   master=pageObj,
+                   text='otp',
+                   style='h0.TLabel'
+        ).pack(
+               padx=60,
+               pady=15,
+               expand=True
+        )
         otp = tkinter.IntVar()
-        ttk.Entry(master=pageObj, textvariable=otp).pack()
+        ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(
+               ipady=5,
+               ipadx=60,
+               padx=60,
+               pady=15,
+               expand=True)
+        
+        ttk.Frame(master=pageObj).pack(pady=40)
+        ttk.Button(master=pageObj,
+                   text='send otp',
+                   style='mainPage.TButton',
+                   command=lambda self=self, num=phoneNumber, calable=self: calable.sendOtp(phoneNumber)
+        ).pack(pady = 40, padx = (360,20), anchor=tk.S, side=tk.LEFT)
         ttk.Button(master=pageObj,
                    text='sign in',
                    style='mainPage.TButton',
                    command=lambda self=self, num=phoneNumber, pwd=otp: self.
-                   validateSignIn(num, pwd)).pack()
+                   validateSignIn(num, pwd)).pack(pady = 40, padx = 40, anchor=tk.W)
         return pageObj
 
     def makeMenu(self) -> Page:
         pageObj = Page(self, 'Menu')
-        self.getHeader('Menu', pageObj).pack()
+        self.getHeader('Menu', pageObj).pack(ipadx=self.width,ipady=60)
         return pageObj
 
     def getHeader(self, text: str, parent: Page, canKart=True) -> ttk.Frame:
         pageObj = ttk.Frame(master=parent)
-        ttk.Button(master=pageObj, text='back',
-                   command=self.goBack).pack(anchor=tk.W, side=tk.LEFT)
-        ttk.Label(master=pageObj, text=text).pack(anchor=tk.CENTER,
-                                                  side=tk.LEFT)
+        ttk.Button(
+                   master=pageObj,
+                   text='back',
+                   style='mainPage.TButton',
+                   command=self.goBack
+                   ).pack(
+                       anchor=tk.NW,
+                       side=tk.LEFT
+                       )
+        ttk.Label(
+                  master=pageObj,
+                  text=text,
+                  style='h0.TLabel'
+                  ).pack(
+                         anchor=tk.N,
+                         expand=True,
+                         side=tk.LEFT)
         if canKart:
-            ttk.Button(master=pageObj,
+            ttk.Button(
+                       master=pageObj,
                        text='cart',
-                       command=lambda: self.switch(22)).pack(anchor=tk.E)
+                       style='mainPage.TButton',
+                       command=lambda: self.switch(22)
+                       ).pack(anchor=tk.NE)
         return pageObj
 
     def makeCart(self) -> Page:
         pageObj = Page(self, 'yourHonor')
-        self.getHeader('yourHonor', pageObj, False).pack()
+        self.getHeader('yourHonor', pageObj, False).pack(ipadx=self.width,ipady=60)
         return pageObj
