@@ -16,7 +16,7 @@ Client to server ones are:
 - DBFailed: operation errored in this case rollback to previous version
 
 ## Protocol
-req: 
+req:
 - type -> Otp | Database
 - if Otp: number -> int
 - if Database:

@@ -1,4 +1,4 @@
-def handle(req: dict, db = None) -> any:
+def handle(req: dict, db = None):
     x = req["type"]
     if x == "Otp":
         return handleOtp(req["number"])
