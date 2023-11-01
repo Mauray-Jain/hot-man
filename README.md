@@ -80,7 +80,31 @@ Menu::
 # momos
 - tandori momo
 - steamed momo
-- fryed momo
+- fried momo
+- vegetable momo
+- paneer momo
+- cheese momo
+- ghost pepper momo
+- natural momo
+- inidan momo
+- chinese momo
+- kashmiri momo
+- carrot only momo
+- large momo
+- extra large momo
+- aged momo
+- wrinkle free momo
+- glutten free momo
+- extra fee momo
+- gold leaf momo
+- extra terrestrial momo
+- happy birthday momo
+- soggy momo
+- momo for kids
+- vegetable free momo
+- colored momo
+- fortune momo(like fortune cokkies but momo me)
+- non-alchoholic, non-psycodelic momo
 
 # aloo
 - tandoori aloo
