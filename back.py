@@ -19,18 +19,7 @@ def accept_connection(s):
     eventMask = selectors.EVENT_READ | selectors.EVENT_WRITE
     selector.register(connection, eventMask, data = data)
 
-# with connection:
-#     while True:
-#         data = recv(connection)
-#         if data == -1:
-#             break
-#         elif data != 0:
-#             if handle(data) == -1:
-#                 send(connection, {"status": "Invalid"})
-#             else:
-#                 print(type(data), data)
-#                 send(connection, data)
-
+# Handling connection
 def service_connection(key, mask):
     sock = key.fileobj
     data = key.data
@@ -43,11 +32,16 @@ def service_connection(key, mask):
                     selector.unregister(sock)
                     sock.close()
                     break
-                print(i)
+                if handle(i) == -1:
+                    data.outb = {"status": "Invalid"}
+                else:
+                    print(type(data), data)
+                    send(sock, i)
     if mask & selectors.EVENT_WRITE:  # Ready to write
         if data.outb:
             print(f"Echoing {data.outb!r} to {data.addr}")
-            sock.sendall(data.outb)
+            send(sock, data.outb)
+            data.outb = b''
 
 s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
