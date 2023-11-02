@@ -1,13 +1,21 @@
 import mysql.connector
 from mysql.connector import errorcode
-from tables import tables
+from Server.tables import menu
 
-config = {
-    "user" : "root",
-    "password" : "",
-    "host" : "::1",
-    "database" : "hotman"
-}
+def createDB(cnx, cursor, database):
+    try:
+        cursor.execute(f"use {database}")
+        cnx.database = database
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist, creating new")
+            cursor.execute(f"create database {database}")
+            cnx.database = database
+        else:
+            print(err)
+            exit(1)
 
 def createTable(cursor, table_desc):
     try:
@@ -18,33 +26,39 @@ def createTable(cursor, table_desc):
         else:
             print(err.msg)
 
-def createRecorcd(cnx, cursor, table_name, record):
+def createRecord(cnx, cursor, table_name, fields, values):
+    if fields == ():
+        fields = tuple(values.keys())
+        values = tuple(values.values())
+    if len(fields) != len(values):
+        return -1
+    fields = str(fields).replace("'", "")
     try:
-        cursor.execute(f"insert into {table_name} values {record}");
+        cursor.execute(f"insert into {table_name} {fields} values {values}");
         cnx.commit()
     except mysql.connector.errors.DataError:
         return -1
     return 0
 
-cnx = mysql.connector.connect(user = config["user"], password = config["password"])
-cursor = cnx.cursor()
+def createMenu(cnx, cursor):
+    cursor.execute("select id from menu where id=1")
+    earlier_menu = cursor.fetchone()
+    if earlier_menu is not None:
+        return
+    for i in menu:
+        if createRecord(cnx, cursor, "menu", ("name", "category", "rate", "quantity_available"), i) == -1:
+            print("Error creating menu")
+            exit(1)
 
-try:
-    cursor.execute(f"use {config["database"]}")
-    cnx.database = config["database"]
-except mysql.connector.Error as err:
-    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("Something is wrong with your user name or password")
-    elif err.errno == errorcode.ER_BAD_DB_ERROR:
-        print("Database does not exist, creating new")
-        cursor.execute(f"create database {config["database"]}")
-        cnx.database = config["database"]
-    else:
-        print(err)
-        exit(1)
-
-createRecorcd(cnx, cursor, "test", ("heee", "209"))
-createTable(cursor, tables["menu"])
-
-cursor.close()
-cnx.close()
+def readMenu(cnx, cursor):
+    cursor.execute("select category, name, rate from menu where quantity_available > 0")
+    output = cursor.fetchall()
+    if output == []:
+        return -1
+    obj = {}
+    for i in output:
+        i = list(i)
+        if i[0] not in obj:
+            obj[i[0]] = []
+        obj[i[0]].append(i[1:])
+    return obj

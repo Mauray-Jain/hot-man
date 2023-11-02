@@ -42,7 +42,6 @@ menu = [
     ("Rasam", "South Indian", 80, 100),
     ("Vada", "South Indian", 100, 300),
 
-    ("Out of Stock since COVID", "Chinese", 300, 100),
     ("Chowmein", "Chinese", 150, 300),
     ("Chilli Potato", "Chinese", 170, 300),
     ("Chilli Paneer", "Chinese", 220, 300),
@@ -65,6 +64,8 @@ menu = [
     ("Cherry Tomato Pizza", "Italian", 220, 300),
     ("White Pasta", "Italian", 200, 300),
     ("Red Pasta", "Italian", 200, 300),
+    ("Garlic Bread", "Italian", 100, 300),
+    ("Mushroom Garlic Bread", "Italian", 150, 300),
 
     ("Rumali Roti", "Breads", 40, 300),
     ("Missi Roti", "Breads", 40, 300),
@@ -77,3 +78,12 @@ menu = [
 ]
 
 tables["cart"] = ()
+
+config = {
+    "user" : "root",
+    "password" : "MJ#LovesMysql",
+    "host" : "::1",
+    "database" : "hotman",
+    "menu" : "menu",
+    "cart" : "cart"
+}

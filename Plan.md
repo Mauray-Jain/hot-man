@@ -20,7 +20,7 @@ req:
 - type -> Otp | Database
 - if Otp: number -> int
 - if Database:
-- query -> {"type": "C | R | U | D", "item": , "content": }
+- query -> {"type": "C | R | U | D", "table": , "content": }
 
 res:
 - status -> Invalid | Success

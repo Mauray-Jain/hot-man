@@ -1,14 +1,24 @@
 import socket
 import selectors
 import types
+import mysql.connector
 from Middle.api import *
 from Server.handle_req import handle
+from Server.database import *
+from Server.tables import *
 
 HOST = "::1"
 PORT = 5000
-
 selector = selectors.DefaultSelector()
+
 # db
+cnx = mysql.connector.connect(user = config["user"], password = config["password"])
+cursor = cnx.cursor()
+
+createDB(cnx, cursor, config["database"])
+for i in tables:
+    createTable(cursor, tables[i])
+createMenu(cnx, cursor)
 
 # Accept
 def accept_connection(s):
@@ -32,11 +42,13 @@ def service_connection(key, mask):
                     selector.unregister(sock)
                     sock.close()
                     break
-                if handle(i) == -1:
+                output = handle(i, cnx, cursor)
+                if output == -1:
                     data.outb = {"status": "Invalid"}
                 else:
                     print(type(data), data)
-                    send(sock, i)
+                    print(data.inb)
+                    data.outb = {"status": "Success", "content": output}
     if mask & selectors.EVENT_WRITE:  # Ready to write
         if data.outb:
             print(f"Echoing {data.outb!r} to {data.addr}")
@@ -62,3 +74,5 @@ except KeyboardInterrupt:
     print("Buhbye")
 finally:
     selector.close()
+    cursor.close()
+    cnx.close()
