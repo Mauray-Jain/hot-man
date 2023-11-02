@@ -19,6 +19,8 @@ menu = [
     ("Tandoori Aloo", "Starters", 110, 150),
     ("Platter", "Starters", 350, 150),
     ("Pav Bhaji", "Starters", 180, 300),
+    ("Vada Pav", "Starters", 100, 200),
+    ("Burger", "Starters", 70, 200),
 
     ("Shahi Paneer", "Subji", 220, 400),
     ("Palak Paneer", "Subji", 200, 300),
@@ -35,6 +37,7 @@ menu = [
     ("Idli Sambhar", "South Indian", 180, 300),
     ("Masala Dosa", "South Indian", 170, 300),
     ("Sada Dosa", "South Indian", 160, 300),
+    ("Uttapam", "South Indian", 180, 300),
     ("Rasam", "South Indian", 80, 100),
     ("Vada", "South Indian", 100, 300),
 
@@ -43,11 +46,18 @@ menu = [
     ("Chiilli Potato", "Chinese", 170, 300),
     ("Chilli Paneer", "Chinese", 220, 300),
     ("Manchurian", "Chinese", 150, 300),
+    ("Steamed Momos", "Chinese", 70, 300),
+    ("Tandoori Momos", "Chinese", 70, 300),
+    ("Fried Momos", "Chinese", 70, 300),
+    ("Paneer Momos", "Chinese", 70, 300),
+    ("Steamed Momos", "Chinese", 70, 300),
+    ("Steamed Momos", "Chinese", 70, 300),
 
     ("Rice", "Rice", 100, 300),
     ("Fried Rice", "Rice", 150, 300),
     ("Pulao", "Rice", 180, 300),
-    ("Biryani", "Rice", 200, 300),
+    ("Veg Biryani", "Rice", 200, 300),
+    ("Chhole Rice", "Rice", 150, 300),
 
     ("Double Cheese Pizza", "Italian", 250, 300),
     ("Margherita Pizza", "Italian", 200, 300),
@@ -59,9 +69,10 @@ menu = [
     ("Missi Roti", "Breads", 60, 300),
     ("Tandoori Roti", "Breads", 60, 300),
     ("Aaloo Parantha", "Breads", 80, 300),
-
-
-
+    ("Lachha Parantha", "Breads", 80, 300),
+    ("Butter Roti", "Breads", 50, 400),
+    ("Paneer Parantha", "Breads", 90, 300),
+    ("Stuffed Kulcha", "Breads", 100, 300),
 ]
 
 tables["cart"] = ()
