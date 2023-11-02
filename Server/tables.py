@@ -3,7 +3,7 @@ tables = {}
 tables["menu"] = (
     "create table `menu`("
     "   `id` int(5) primary key auto_increment,"
-    "   `name` varchar(20) not null,"
+    "   `name` varchar(100) not null,"
     "   `category` varchar(20) not null,"
     "   `rate` int(5) not null,"
     "   `quantity_available` int(7) not null"
@@ -11,13 +11,14 @@ tables["menu"] = (
 )
 
 menu = [
-    ("Paneer Tikka", "Starters", 160, 150),
-    ("Dahi Kebab", "Starters", 110, 150),
-    ("Hara Bhara Kebab", "Starters", 110, 150),
-    ("French Fries", "Starters", 130, 150),
-    ("Seekh Kebab", "Starters", 130, 150),
-    ("Tandoori Aloo", "Starters", 110, 150),
-    ("Platter", "Starters", 350, 150),
+    ("Paneer Tikka", "Starters", 160, 200),
+    ("Dahi Kebab", "Starters", 110, 200),
+    ("Hara Bhara Kebab", "Starters", 110, 200),
+    ("Masala Chap Tikka", "Starters", 110, 200),
+    ("French Fries", "Starters", 130, 200),
+    ("Veg Seekh Kebab", "Starters", 130, 200),
+    ("Tandoori Aloo", "Starters", 110, 200),
+    ("Platter", "Starters", 350, 200),
     ("Pav Bhaji", "Starters", 180, 300),
     ("Vada Pav", "Starters", 100, 200),
     ("Burger", "Starters", 70, 200),
@@ -43,7 +44,7 @@ menu = [
 
     ("Out of Stock since COVID", "Chinese", 300, 100),
     ("Chowmein", "Chinese", 150, 300),
-    ("Chiilli Potato", "Chinese", 170, 300),
+    ("Chilli Potato", "Chinese", 170, 300),
     ("Chilli Paneer", "Chinese", 220, 300),
     ("Manchurian", "Chinese", 150, 300),
     ("Steamed Momos", "Chinese", 70, 300),
@@ -65,14 +66,14 @@ menu = [
     ("White Pasta", "Italian", 200, 300),
     ("Red Pasta", "Italian", 200, 300),
 
-    ("Rumali Roti", "Breads", 60, 300),
-    ("Missi Roti", "Breads", 60, 300),
-    ("Tandoori Roti", "Breads", 60, 300),
-    ("Aaloo Parantha", "Breads", 80, 300),
-    ("Lachha Parantha", "Breads", 80, 300),
+    ("Rumali Roti", "Breads", 40, 300),
+    ("Missi Roti", "Breads", 40, 300),
+    ("Tandoori Roti", "Breads", 40, 300),
+    ("Aaloo Parantha", "Breads", 60, 300),
+    ("Lachha Parantha", "Breads", 60, 300),
     ("Butter Roti", "Breads", 50, 400),
     ("Paneer Parantha", "Breads", 90, 300),
-    ("Stuffed Kulcha", "Breads", 100, 300),
+    ("Stuffed Kulcha", "Breads", 90, 300),
 ]
 
 tables["cart"] = ()
