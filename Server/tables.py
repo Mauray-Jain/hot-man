@@ -10,6 +10,58 @@ tables["menu"] = (
     ")"
 )
 
-tables["cart"] = ()
+menu = [
+    ("Paneer Tikka", "Starters", 160, 150),
+    ("Dahi Kebab", "Starters", 110, 150),
+    ("Hara Bhara Kebab", "Starters", 110, 150),
+    ("French Fries", "Starters", 130, 150),
+    ("Seekh Kebab", "Starters", 130, 150),
+    ("Tandoori Aloo", "Starters", 110, 150),
+    ("Platter", "Starters", 350, 150),
+    ("Pav Bhaji", "Starters", 180, 300),
 
-tables["orders"] = ()
+    ("Shahi Paneer", "Subji", 220, 400),
+    ("Palak Paneer", "Subji", 200, 300),
+    ("Paneer Lababdar", "Subji", 220, 400),
+    ("Kadhai Paneer", "Subji", 200, 300),
+    ("Paneer Do Pyaza", "Subji", 220, 300),
+    ("Paneer Butter Masala", "Subji", 220, 300),
+    ("Chhole", "Subji", 180, 300),
+    ("Dal Makhni", "Subji", 200, 400),
+    ("Maa ki Dal", "Subji", 200, 300),
+    ("Dal Tadka", "Subji", 180, 300),
+    ("Dum Aaloo", "Subji", 180, 300),
+
+    ("Idli Sambhar", "South Indian", 180, 300),
+    ("Masala Dosa", "South Indian", 170, 300),
+    ("Sada Dosa", "South Indian", 160, 300),
+    ("Rasam", "South Indian", 80, 100),
+    ("Vada", "South Indian", 100, 300),
+
+    ("Out of Stock since COVID", "Chinese", 300, 100),
+    ("Chowmein", "Chinese", 150, 300),
+    ("Chiilli Potato", "Chinese", 170, 300),
+    ("Chilli Paneer", "Chinese", 220, 300),
+    ("Manchurian", "Chinese", 150, 300),
+
+    ("Rice", "Rice", 100, 300),
+    ("Fried Rice", "Rice", 150, 300),
+    ("Pulao", "Rice", 180, 300),
+    ("Biryani", "Rice", 200, 300),
+
+    ("Double Cheese Pizza", "Italian", 250, 300),
+    ("Margherita Pizza", "Italian", 200, 300),
+    ("Cherry Tomato Pizza", "Italian", 220, 300),
+    ("White Pasta", "Italian", 200, 300),
+    ("Red Pasta", "Italian", 200, 300),
+
+    ("Rumali Roti", "Breads", 60, 300),
+    ("Missi Roti", "Breads", 60, 300),
+    ("Tandoori Roti", "Breads", 60, 300),
+    ("Aaloo Parantha", "Breads", 80, 300),
+
+
+
+]
+
+tables["cart"] = ()
