@@ -25,7 +25,7 @@ Menu::
 - shahi paneer
 - paneer butter masala
 - <em>paneer andheri
-- toofani paneer<em>
+- toofani paneer</em>
 
 # Daal
 - daal makhni
