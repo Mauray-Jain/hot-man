@@ -18,6 +18,7 @@ if __name__ == '__main__':
     app.mainloop()
 
     send(s, {"type": "Otp", "number": "98971"})
+    send(s, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": "Why are we still here?"}})
     print(recv(s))
     send(s, {"type": "Close"})
     s.close()

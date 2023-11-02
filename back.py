@@ -36,13 +36,12 @@ def service_connection(key, mask):
     if mask & selectors.EVENT_READ: # Ready to read
         recv_data = recv(sock)
         if recv_data != 0:
-            for i in recv_data:
-                if i["type"] == "Close":
-                    print(f"Closing connection to {data.addr}")
-                    selector.unregister(sock)
-                    sock.close()
-                    break
-                output = handle(i, cnx, cursor)
+            if recv_data["type"] == "Close":
+                print(f"Closing connection to {data.addr}")
+                selector.unregister(sock)
+                sock.close()
+            else:
+                output = handle(recv_data, cnx, cursor)
                 if output == -1:
                     data.outb = {"status": "Invalid"}
                 else:
