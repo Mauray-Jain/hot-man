@@ -10,7 +10,6 @@ Menu::
 - paneer tikka
 - dahi kebab
 - hara bhara kabab
-- honey chilli potato
 - palak chat
 - french fries
 - seekh kebab
@@ -48,6 +47,7 @@ Menu::
 - manchow noodles
 - other thicker noodles
 - chilli paneer
+- honey chilli potsto
 - manchurian
 
 # italian
