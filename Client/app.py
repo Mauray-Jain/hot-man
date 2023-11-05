@@ -1,7 +1,46 @@
 import tkinter
-from socket import socket
+from socket import *
 from Client.page import *
-from Middle.api import send
+from Middle.api import send, recv
+
+class Scrollable(tk.Frame):
+    """
+       Make a frame scrollable with scrollbar on the right.
+       After adding or removing widgets to the scrollable frame,
+       call the update() method to refresh the scrollable area.
+    """
+    #                       repurposed from https://stackoverflow.com/questions/3085696/adding-a-scrollbar-to-a-group-of-widgets-in-tkinter
+    #                       comment by user tarqez on feb 7 at 20:32 from a windows machine at ip: 151.0.144.83::2030
+    def __init__(self, frame, width=16):
+
+        scrollbar = tk.Scrollbar(frame, width=width)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
+
+        self.canvas = tk.Canvas(frame, yscrollcommand=scrollbar.set)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        scrollbar.config(command=self.canvas.yview)
+
+        self.canvas.bind('<Configure>', self.__fill_canvas)
+
+        # base class initialization
+        tk.Frame.__init__(self, frame)
+
+        # assign this obj (the inner frame) to the windows item of the canvas
+        self.windows_item = self.canvas.create_window(0,0, window=self, anchor=tk.NW)
+
+
+    def __fill_canvas(self, event):
+        "Enlarge the windows item to the canvas width"
+
+        canvas_width = event.width
+        self.canvas.itemconfig(self.windows_item, width = canvas_width)
+
+    def update(self):
+        "Update the canvas and the scrollregion"
+
+        self.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox(self.windows_item))
 
 
 class App(tk.Tk):
@@ -35,11 +74,14 @@ class App(tk.Tk):
         self.switch(self.curPage)
         self.sock = s
 
-    def getStyle(self) -> ttk.Style:
+    @staticmethod
+    def getStyle() -> ttk.Style:
         st = ttk.Style()
-        st.configure('mainPage.TButton', font=('Times New Roman', 24))
-        st.configure('h0.TEntry', font=('Times New Roman', 24))
-        st.configure('h0.TLabel', font=('Times New Roman', 24))
+        st.configure('mainPage.TButton', font=('Times New Roman', 32))
+        st.configure('h0.TEntry', font=('Times New Roman', 32))
+        st.configure('h0.TLabel', font=('Times New Roman', 32))
+        st.configure('h1.TLabel', font=('Times New Roman', 24))
+        st.configure('h2.TLabel', font=('Times New Roman', 18))
         return st
 
     def switch(self,
@@ -65,7 +107,8 @@ class App(tk.Tk):
     def openPopup(self, popupno: int) -> None:
         pass
 
-    def staffLogin(self):
+    @staticmethod
+    def staffLogin():
         print('switch to staff site')
 
     def validateSignIn(self, number, passwd):
@@ -169,7 +212,7 @@ class App(tk.Tk):
             text='otp',
             style='h0.TLabel'
         ).pack(
-            pady=(15,5)
+            pady=(15, 5)
         )
         otp = tkinter.IntVar()
         ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(
@@ -178,7 +221,7 @@ class App(tk.Tk):
             pady=15)
 
         ttk.Frame(master=pageObj).pack(pady=40)
-        buttonBox=ttk.Frame(master=pageObj)
+        buttonBox = ttk.Frame(master=pageObj)
         ttk.Button(master=buttonBox,
                    text='send otp',
                    style='mainPage.TButton',
@@ -189,17 +232,58 @@ class App(tk.Tk):
                    style='mainPage.TButton',
                    command=lambda _self=self, num=phoneNumber, pwd=otp: _self.validateSignIn(num, pwd)
                    ).pack(
-                        pady=40,
-                        padx=20,
-                        anchor=tk.W)
+            pady=40,
+            padx=20,
+            anchor=tk.W)
         buttonBox.pack(
             anchor=tk.CENTER
         )
         return pageObj
 
+    def getMenu(self):
+        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": "Why are we still "
+                                                                                                   "here?"}})
+        return recv(self.sock)
+
+    @staticmethod
+    def getMenuItemBox(menupage, title, itemlst) -> ttk.Frame:
+        foodBox = ttk.Frame(master=menupage)
+        foodBox.rowconfigure(0, weight=2)
+        for i in range(1, len(itemlst)):
+            foodBox.rowconfigure(i, weight=1)
+        foodBox.columnconfigure(0, weight=3)  # name
+        foodBox.columnconfigure(1, weight=1)  # price
+        foodBox.columnconfigure(2, weight=1)  # add to cart
+        ttk.Label(
+            master=foodBox,
+            text=title,
+            style='h1.TLabel'
+        ).grid(row=0, column=0, columnspan=2, sticky=tk.W)
+        curow = 0
+        for itm in itemlst:
+            curow += 1
+            ttk.Label(
+                master=foodBox,
+                text=itm[0],
+                style='h2.TLabel'
+            ).grid(row=curow, column=0)
+            ttk.Label(
+                master=foodBox,
+                text=itm[1],
+                style='h2.TLabel'
+            ).grid(row=curow, column=1)
+        return foodBox
+
     def makeMenu(self) -> Page:
         pageObj = Page(self, 'Menu')
-        self.getHeader('Menu', pageObj).pack(ipadx=self.width, ipady=60)
+        self.getHeader('Menu', pageObj).pack(ipadx=self.width)
+        menyou = self.getMenu()
+        if not menyou['status'] == 'Success':
+            raise 'server error status != \'Success\''
+        menyou = menyou['content']
+        for key in menyou:
+            self.getMenuItemBox(pageObj, key, menyou[key]).pack(ipadx=self.width)
+        Scrollable(pageObj, width=20)
         return pageObj
 
     def getHeader(self, text: str, parent: Page, canKart=True) -> ttk.Frame:

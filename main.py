@@ -1,6 +1,5 @@
 from Client.app import App
 import socket
-from Middle.api import *
 
 if __name__ == '__main__':
     HOST: str = "::1" # Loopback for now but will be changed later
@@ -16,11 +15,10 @@ if __name__ == '__main__':
 
     app = App(s)
     app.mainloop()
-
-    send(s, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": "Why are we still here?"}})
-    print(recv(s))
-    print("sent 2nd")
-    send(s, {"type": "Otp", "number": "9897143925"})
-    print(recv(s))
-    send(s, {"type": "Close"})
+    # send(s, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": "Why are we still here?"}})
+    # print(recv(s))
+    # print("sent 2nd")
+    # send(s, {"type": "Otp", "number": "9897143925"})
+    # print(recv(s))
+    # send(s, {"type": "Close"})
     s.close()

@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 from Server.tables import menu
 
+
 def createDB(cnx, cursor, database):
     try:
         cursor.execute(f"use {database}")
@@ -17,6 +18,7 @@ def createDB(cnx, cursor, database):
             print(err)
             exit(1)
 
+
 def createTable(cursor, table_desc):
     try:
         cursor.execute(table_desc)
@@ -26,6 +28,7 @@ def createTable(cursor, table_desc):
         else:
             print(err.msg)
 
+
 def createRecord(cnx, cursor, table_name, fields, values):
     if fields == ():
         fields = tuple(values.keys())
@@ -34,11 +37,12 @@ def createRecord(cnx, cursor, table_name, fields, values):
         return -1
     fields = str(fields).replace("'", "")
     try:
-        cursor.execute(f"insert into {table_name} {fields} values {values}");
+        cursor.execute(f"insert into {table_name} {fields} values {values}")
         cnx.commit()
     except mysql.connector.errors.DataError:
         return -1
     return 0
+
 
 def createMenu(cnx, cursor):
     cursor.execute("select id from menu where id=1")
@@ -49,6 +53,7 @@ def createMenu(cnx, cursor):
         if createRecord(cnx, cursor, "menu", ("name", "category", "rate", "quantity_available"), i) == -1:
             print("Error creating menu")
             exit(1)
+
 
 def readMenu(cnx, cursor):
     cursor.execute("select category, name, rate from menu where quantity_available > 0")
