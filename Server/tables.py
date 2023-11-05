@@ -81,7 +81,7 @@ tables["cart"] = ()
 
 config = {
     "user" : "root",
-    "password" : "MJ#LovesMysql",
+    "password" : "",
     "host" : "::1",
     "database" : "hotman",
     "menu" : "menu",
