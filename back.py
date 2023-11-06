@@ -12,6 +12,8 @@ PORT = 5000
 selector = selectors.DefaultSelector()
 
 # db
+config["user"] = config["user"] if config["user"] != '' else input("DB Username: ")
+config["password"] = config["password"] if config["password"] != '' else input("DB Password: ")
 cnx = mysql.connector.connect(user=config["user"], password=config["password"])
 cursor = cnx.cursor()
 

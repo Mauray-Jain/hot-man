@@ -213,8 +213,7 @@ class App(tk.Tk):
         return pageObj
 
     def getMenu(self):
-        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": "Why are we still "
-                                                                                                   "here?"}})
+        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "menu", "content": ""}})
         return recv(self.sock)
 
     def getMenuItemBox(self, menupage, title, itemlst, minsz=220) -> ttk.Frame:

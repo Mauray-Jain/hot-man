@@ -80,8 +80,8 @@ menu = [
 tables["cart"] = ()
 
 config = {
-    "user" : "user",
-    "password" : "password",
+    "user" : "",
+    "password" : "",
     "host" : "::1",
     "database" : "hotman",
     "menu" : "menu",
