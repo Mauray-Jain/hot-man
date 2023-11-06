@@ -29,6 +29,29 @@ from tkinter import ttk
 #         # for those widgets which need to call some function when done setting up
 #         pass
 
+class FrameWithScrollBar(tk.Canvas):
+
+    #ways to make this work
+    #https://blog.teclado.com/tkinter-scrollable-frames/
+    #https://stackoverflow.com/questions/40526496/vertical-scrollbar-for-frame-in-tkinter-python
+    # if they dont work - https://pypi.org/project/tkScrolledFrame/
+    def __init__(self, master):
+        super().__init__(master)
+        self.scroll_y = ttk.Scrollbar(master, orient='vertical', command=self.yview)
+        # self.scroll_x = ttk.Scrollbar(master, orient='horizontal', command=self.xview)
+        self.fr = tk.Frame(self)
+        self.fr.bind(
+            "<Configure>",
+            lambda e:self.configure(
+                scrollregion=self.bbox('all')
+            )
+        )
+        self.create_window(0, 0, window=self.fr, anchor='nw')
+        self.configure(yscrollcommand=self.scroll_y.set)
+        # self.configure(xscrollcommand=self.scroll_x.set)
+        self.scroll_y.pack(fill='y', side='right')
+        # self.scroll_x.pack(fill='x', side='bottom')
+
 
 class Page(ttk.Frame):
     pageId = ''

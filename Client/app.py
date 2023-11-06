@@ -1,46 +1,15 @@
-import tkinter
 from socket import *
 from Client.page import *
 from Middle.api import send, recv
 
-class Scrollable(tk.Frame):
-    """
-       Make a frame scrollable with scrollbar on the right.
-       After adding or removing widgets to the scrollable frame,
-       call the update() method to refresh the scrollable area.
-    """
-    #                       repurposed from https://stackoverflow.com/questions/3085696/adding-a-scrollbar-to-a-group-of-widgets-in-tkinter
-    #                       comment by user tarqez on feb 7 at 20:32 from a windows machine at ip: 151.0.144.83::2030
-    def __init__(self, frame, width=16):
+        # self.fr.pack(ipadx=master.winfo_width())
 
-        scrollbar = tk.Scrollbar(frame, width=width)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
-
-        self.canvas = tk.Canvas(frame, yscrollcommand=scrollbar.set)
-        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        scrollbar.config(command=self.canvas.yview)
-
-        self.canvas.bind('<Configure>', self.__fill_canvas)
-
-        # base class initialization
-        tk.Frame.__init__(self, frame)
-
-        # assign this obj (the inner frame) to the windows item of the canvas
-        self.windows_item = self.canvas.create_window(0,0, window=self, anchor=tk.NW)
-
-
-    def __fill_canvas(self, event):
-        "Enlarge the windows item to the canvas width"
-
-        canvas_width = event.width
-        self.canvas.itemconfig(self.windows_item, width = canvas_width)
-
-    def update(self):
-        "Update the canvas and the scrollregion"
-
-        self.update_idletasks()
-        self.canvas.config(scrollregion=self.canvas.bbox(self.windows_item))
+    # def pack(self, ipadx, ipady):
+    #     self.update_idletasks()
+    #     self.configure(scrollregion=self.bbox('all'),
+    #                    yscrollcommand=self.scroll_y.set)
+    #     super().pack(ipadx=ipadx, ipady=ipady, fill='both', expand=True, side='left')
+    #     self.scroll_y.pack(fill='y', side='right')
 
 
 class App(tk.Tk):
@@ -160,19 +129,19 @@ class App(tk.Tk):
             master=pageObj,
             text='back',
             command=self.goBack).pack()
-        name = tkinter.StringVar()
+        name = tk.StringVar()
         ttk.Label(master=pageObj, text='Name').pack()
         ttk.Entry(master=pageObj, textvariable=name).pack()
-        phoneNumber = tkinter.IntVar()
+        phoneNumber = tk.IntVar()
         ttk.Label(master=pageObj, text='phoneNumber').pack()
         ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()
-        password = tkinter.StringVar()
+        password = tk.StringVar()
         ttk.Label(master=pageObj, text='Password').pack()
         ttk.Entry(master=pageObj, textvariable=password).pack()
-        confirnPassword = tkinter.StringVar()
+        confirnPassword = tk.StringVar()
         ttk.Label(master=pageObj, text='confirnPassword').pack()
         ttk.Entry(master=pageObj, textvariable=confirnPassword).pack()
-        otp = tkinter.IntVar()
+        otp = tk.IntVar()
         ttk.Button(master=pageObj,
                    text='(re)send otp',
                    command=lambda num=phoneNumber, calable=self: calable.
@@ -201,7 +170,7 @@ class App(tk.Tk):
         ).pack(
             pady=(15, 5)
         )
-        phoneNumber = tkinter.StringVar()
+        phoneNumber = tk.StringVar()
         ttk.Entry(master=pageObj, textvariable=phoneNumber, style='h0.TEntry').pack(
             ipady=5,
             ipadx=60,
@@ -214,7 +183,7 @@ class App(tk.Tk):
         ).pack(
             pady=(15, 5)
         )
-        otp = tkinter.IntVar()
+        otp = tk.IntVar()
         ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(
             ipady=5,
             ipadx=60,
@@ -246,11 +215,11 @@ class App(tk.Tk):
         return recv(self.sock)
 
     @staticmethod
-    def getMenuItemBox(menupage, title, itemlst) -> ttk.Frame:
+    def getMenuItemBox(menupage, title, itemlst, minsz=220) -> ttk.Frame:
         foodBox = ttk.Frame(master=menupage)
-        foodBox.rowconfigure(0, weight=2)
+        foodBox.rowconfigure(0, weight=2, uniform='5')
         for i in range(1, len(itemlst)):
-            foodBox.rowconfigure(i, weight=1)
+            foodBox.rowconfigure(i, weight=1, uniform='4')
         foodBox.columnconfigure(0, weight=3)  # name
         foodBox.columnconfigure(1, weight=1)  # price
         foodBox.columnconfigure(2, weight=1)  # add to cart
@@ -258,7 +227,7 @@ class App(tk.Tk):
             master=foodBox,
             text=title,
             style='h1.TLabel'
-        ).grid(row=0, column=0, columnspan=2, sticky=tk.W)
+        ).grid(row=0, column=0, columnspan=3, sticky=tk.W, ipadx=minsz)
         curow = 0
         for itm in itemlst:
             curow += 1
@@ -274,19 +243,20 @@ class App(tk.Tk):
             ).grid(row=curow, column=1)
         return foodBox
 
-    def makeMenu(self) -> Page:
-        pageObj = Page(self, 'Menu')
-        self.getHeader('Menu', pageObj).pack(ipadx=self.width)
+    def makeMenu(self) -> Page | FrameWithScrollBar:
+        pageparentobj = Page(self, 'Menu')
+        pageObj = FrameWithScrollBar(pageparentobj)
+        self.getHeader('Menu', pageObj.fr).pack(ipadx=227)
         menyou = self.getMenu()
         if not menyou['status'] == 'Success':
             raise 'server error status != \'Success\''
         menyou = menyou['content']
         for key in menyou:
-            self.getMenuItemBox(pageObj, key, menyou[key]).pack(ipadx=self.width)
-        Scrollable(pageObj, width=20)
-        return pageObj
+            self.getMenuItemBox(pageObj.fr, key, menyou[key], minsz=220).pack(ipadx=220)
+        pageObj.pack(anchor='nw', ipadx=self.width, ipady=self.width, padx =0, pady=0)
+        return pageparentobj
 
-    def getHeader(self, text: str, parent: Page, canKart=True) -> ttk.Frame:
+    def getHeader(self, text: str, parent: Page | ttk.Frame, canKart=True) -> ttk.Frame:
         pageObj = ttk.Frame(master=parent)
         ttk.Button(
             master=pageObj,
