@@ -2,15 +2,6 @@ from socket import *
 from Client.page import *
 from Middle.api import send, recv
 
-        # self.fr.pack(ipadx=master.winfo_width())
-
-    # def pack(self, ipadx, ipady):
-    #     self.update_idletasks()
-    #     self.configure(scrollregion=self.bbox('all'),
-    #                    yscrollcommand=self.scroll_y.set)
-    #     super().pack(ipadx=ipadx, ipady=ipady, fill='both', expand=True, side='left')
-    #     self.scroll_y.pack(fill='y', side='right')
-
 
 class App(tk.Tk):
     height: int = 720
@@ -24,6 +15,7 @@ class App(tk.Tk):
 
     def __init__(self, s):
         super().__init__()
+        self.phno = 0
         self.pageCreatorPrototypes = {
             0: self.makeStartPage,
             # 11: self.makeSignIn,                    # depreciated
@@ -51,6 +43,8 @@ class App(tk.Tk):
         st.configure('h0.TLabel', font=('Times New Roman', 32))
         st.configure('h1.TLabel', font=('Times New Roman', 24))
         st.configure('h2.TLabel', font=('Times New Roman', 18))
+        st.configure('h1.TButton', font=('Times New Roman', 24))
+        st.configure('h2.TButton', font=('Times New Roman', 18))
         return st
 
     def switch(self,
@@ -61,8 +55,6 @@ class App(tk.Tk):
             print('Popup no :', pageNo)
             self.openPopup(pageNo)
             return
-        else:
-            print('Opening ', pageNo)
         if not bake:
             self.back.append(self.curPage)
         # self.back.append(self.curPage)
@@ -84,12 +76,23 @@ class App(tk.Tk):
         print('checking credentials ....')
         print(number.get(), '\t:\t', passwd.get())
         print('if fine: switch, else : popup(message)')
+        self.phno = number.get()
         self.switch(21)
 
-    def sendOtp(self, number):
+    def sendOtp(self, number) -> None:
         num: int = number.get()
         print('send otp to', num)
         send(self.sock, {"type": "Otp", "number": num})
+        # if recv(self.sock)['type'] == 'error':
+        #     raise 'otp not send properly'
+        recv(self.sock)
+
+    def addToCart(self, x) -> None:
+        print(f'adding {x} to cart')
+        send(self.sock, {'type': 'Database', 'query': {"type": "write", "table": 'cart', "user": self.phno, 'content': x}})
+        # if recv(self.sock)['type'] == 'error':
+        #     raise 'couldn\'t add to cart please try again'
+        recv(self.sock)
 
     def createPage(self, pageNo: int = 0):
         self.pages[pageNo] = self.pageCreatorPrototypes[pageNo]()
@@ -214,20 +217,21 @@ class App(tk.Tk):
                                                                                                    "here?"}})
         return recv(self.sock)
 
-    @staticmethod
-    def getMenuItemBox(menupage, title, itemlst, minsz=220) -> ttk.Frame:
+    def getMenuItemBox(self, menupage, title, itemlst, minsz=220) -> ttk.Frame:
         foodBox = ttk.Frame(master=menupage)
         foodBox.rowconfigure(0, weight=2, uniform='5')
+        itemlst[0].append(0)
         for i in range(1, len(itemlst)):
+            itemlst[i].append(0)
             foodBox.rowconfigure(i, weight=1, uniform='4')
-        foodBox.columnconfigure(0, weight=3)  # name
+        foodBox.columnconfigure(0, weight=2)  # name
         foodBox.columnconfigure(1, weight=1)  # price
         foodBox.columnconfigure(2, weight=1)  # add to cart
         ttk.Label(
             master=foodBox,
             text=title,
             style='h1.TLabel'
-        ).grid(row=0, column=0, columnspan=3, sticky=tk.W, ipadx=minsz)
+        ).grid(row=0, column=0, columnspan=3, sticky=tk.W, ipadx=minsz, pady=20)
         curow = 0
         for itm in itemlst:
             curow += 1
@@ -235,25 +239,39 @@ class App(tk.Tk):
                 master=foodBox,
                 text=itm[0],
                 style='h2.TLabel'
-            ).grid(row=curow, column=0)
+            ).grid(row=curow, column=0, pady=10)
             ttk.Label(
                 master=foodBox,
                 text=itm[1],
                 style='h2.TLabel'
-            ).grid(row=curow, column=1)
+            ).grid(row=curow, column=1, pady=10)
+            ttk.Button(
+                master=foodBox,
+                text='AddToCart',
+                style='h2.TButton',
+                command=lambda _self=self, x=itm[0]: _self.addToCart(x=x)
+            ).grid(row=curow, column=2, pady=10)
         return foodBox
 
     def makeMenu(self) -> Page | FrameWithScrollBar:
         pageparentobj = Page(self, 'Menu')
-        pageObj = FrameWithScrollBar(pageparentobj)
-        self.getHeader('Menu', pageObj.fr).pack(ipadx=227)
+        pageObj = FrameWithScrollBar(pageparentobj, self)
+        pageObj.columnconfigure(0, weight=1)
+        pageObj.rowconfigure(0)
+        self.getHeader('Menu', pageObj.fr).grid(row=0, column=0, ipadx=227)
+
         menyou = self.getMenu()
         if not menyou['status'] == 'Success':
             raise 'server error status != \'Success\''
         menyou = menyou['content']
+
+        for i in range(len(menyou)):
+            pageObj.rowconfigure(i)
+        i: int = 0
         for key in menyou:
-            self.getMenuItemBox(pageObj.fr, key, menyou[key], minsz=220).pack(ipadx=220)
-        pageObj.pack(anchor='nw', ipadx=self.width, ipady=self.width, padx =0, pady=0)
+            i += 1
+            self.getMenuItemBox(pageObj.fr, key, menyou[key], minsz=220).grid(row=i, column=0, ipadx=220, pady=20)
+        pageObj.pack(anchor='nw', ipadx=self.width, ipady=self.width, padx=0, pady=0)
         return pageparentobj
 
     def getHeader(self, text: str, parent: Page | ttk.Frame, canKart=True) -> ttk.Frame:
