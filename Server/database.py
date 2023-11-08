@@ -70,19 +70,20 @@ def updateCart(cnx, cursor, record):
     if "quantity" not in record:
         record["quantity"] = 1
     if output == []:
-        print("Record:", record)
         if createRecord(cnx, cursor, "cart", (), record) == -1:
-            print("what tha")
-        print("here")
+            print("Error in creating cart")
+            return -1
         return
     names = []
     for i in output:
         names.append(i[1])
     if record["name"] in names:
-        cursor.execute(f"update cart set quantity = quantity + 1 where name = '{record['name']}'")
+        cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where name = '{record['name']}'")
         cnx.commit()
     else:
-        createRecord(cnx, cursor, "cart", (), record)
+        if createRecord(cnx, cursor, "cart", (), record) == -1:
+            print("Error adding record")
+            return -1
 
 def getTotal(cursor):
     cursor.execute("select rate, quantity from cart")

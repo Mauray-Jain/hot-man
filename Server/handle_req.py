@@ -25,7 +25,7 @@ def handleDB(cnx, cursor, req):
             pass
     elif typeOfOperation == "Update":
         if table == config["cart"]:
-            updateCart(cnx, cursor, content)
+            return updateCart(cnx, cursor, content)
     elif typeOfOperation == "Delete":
         pass
     else:
