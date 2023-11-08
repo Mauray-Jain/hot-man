@@ -22,12 +22,13 @@ def handleDB(cnx, cursor, req):
             menu = readMenu(cursor)
             return menu
         elif table == config["cart"]:
-            pass
+            cart = readCart(cursor)
+            return cart
     elif typeOfOperation == "Update":
         if table == config["cart"]:
             return updateCart(cnx, cursor, content)
     elif typeOfOperation == "Delete":
-        pass
+        return deleteRecord(cnx, cursor, table, content)
     else:
         return -1
 

@@ -47,7 +47,6 @@ def service_connection(key, mask):
                 if output == -1:
                     data.outb = {"status": "Invalid"}
                 else:
-                    print(data.inb)
                     data.outb = {"status": "Success", "content": output}
     if mask & selectors.EVENT_WRITE:  # Ready to write
         if data.outb:

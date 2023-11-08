@@ -40,6 +40,10 @@ def createRecord(cnx, cursor, table_name, fields, values):
         return -1
     return 0
 
+def deleteRecord(cnx, cursor, table, record):
+    cursor.execute(f"delete from {table} where id = {record['id']}")
+    cnx.commit()
+
 def createMenu(cnx, cursor):
     cursor.execute("select id from menu where id=1")
     earlier_menu = cursor.fetchone()
@@ -66,24 +70,52 @@ def readMenu(cursor):
 def updateCart(cnx, cursor, record):
     cursor.execute("select category, name, rate, quantity from cart")
     output = cursor.fetchall()
-    print(output)
+    names = [i[0] for i in menu]
+    categories = [i[1] for i in menu]
+    rates = [i[2] for i in menu]
+    id = names.index(record["name"])
+
+    if record["name"] not in names:
+        return -1
+
+    if "id" not in record:
+        record["id"] = id + 1
+    if "category" not in record:
+        record["category"] = categories[id]
     if "quantity" not in record:
         record["quantity"] = 1
+    if "rate" not in record:
+        record["rate"] = rates[id]
+
     if output == []:
         if createRecord(cnx, cursor, "cart", (), record) == -1:
             print("Error in creating cart")
             return -1
-        return
-    names = []
-    for i in output:
-        names.append(i[1])
-    if record["name"] in names:
-        cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where name = '{record['name']}'")
+        return 0
+
+    namesInCart = [i[1] for i in output]
+    print("cart:", namesInCart)
+    if record["name"] in namesInCart:
+        cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where id = {record['id']}")
         cnx.commit()
     else:
         if createRecord(cnx, cursor, "cart", (), record) == -1:
             print("Error adding record")
             return -1
+    return 0
+
+def readCart(cursor):
+    cursor.execute("select category, name, rate, quantity from cart where quantity > 0")
+    output = cursor.fetchall()
+    if output == []:
+        return -1
+    obj = {}
+    for i in output:
+        i = list(i)
+        if i[0] not in obj:
+            obj[i[0]] = []
+        obj[i[0]].append(i[1:])
+    return obj
 
 def getTotal(cursor):
     cursor.execute("select rate, quantity from cart")
