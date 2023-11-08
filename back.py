@@ -22,7 +22,6 @@ for i in tables:
     createTable(cursor, tables[i])
 createMenu(cnx, cursor)
 
-
 # Accept
 def accept_connection(s):
     connection, address = s.accept()
@@ -31,7 +30,6 @@ def accept_connection(s):
     data = types.SimpleNamespace(addr=address, inb=b"", outb=b"")
     eventMask = selectors.EVENT_READ | selectors.EVENT_WRITE
     selector.register(connection, eventMask, data=data)
-
 
 # Handling connection
 def service_connection(key, mask):
@@ -49,7 +47,6 @@ def service_connection(key, mask):
                 if output == -1:
                     data.outb = {"status": "Invalid"}
                 else:
-                    print(type(data), data)
                     print(data.inb)
                     data.outb = {"status": "Success", "content": output}
     if mask & selectors.EVENT_WRITE:  # Ready to write
@@ -57,7 +54,6 @@ def service_connection(key, mask):
             print(f"Echoing {data.outb!r} to {data.addr}")
             send(sock, data.outb)
             data.outb = b''
-
 
 s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 s.bind((HOST, PORT))

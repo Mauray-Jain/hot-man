@@ -89,7 +89,8 @@ class App(tk.Tk):
 
     def addToCart(self, x) -> None:
         print(f'adding {x} to cart')
-        send(self.sock, {'type': 'Database', 'query': {"type": "write", "table": 'cart', "user": self.phno, 'content': x}})
+        x += {"user": self.phno}
+        send(self.sock, {"type": "Database", "query": {"type": "Update", "table": "cart", "content": x}})
         # if recv(self.sock)['type'] == 'error':
         #     raise 'couldn\'t add to cart please try again'
         recv(self.sock)

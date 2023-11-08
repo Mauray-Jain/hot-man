@@ -5,8 +5,8 @@ tables["menu"] = (
     "   `id` int(5) primary key auto_increment,"
     "   `name` varchar(100) not null,"
     "   `category` varchar(20) not null,"
-    "   `rate` int(5) not null,"
-    "   `quantity_available` int(7) not null"
+    "   `rate` int(4) not null,"
+    "   `quantity_available` int(5) not null"
     ")"
 )
 
@@ -77,7 +77,16 @@ menu = [
     ("Stuffed Kulcha", "Breads", 90, 300),
 ]
 
-tables["cart"] = ()
+tables["cart"] = (
+    "create table `cart`("
+    "   `id` int(5) primary key auto_increment,"
+    "   `user` bigint(10) not null,"
+    "   `name` varchar(100) not null,"
+    "   `category` varchar(20) not null,"
+    "   `rate` int(4) not null,"
+    "   `quantity` int(5) not null"
+    ")"
+)
 
 config = {
     "user" : "",
