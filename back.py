@@ -1,4 +1,4 @@
-# import socket
+import socket
 import selectors
 import types
 # import mysql.connector
