@@ -55,7 +55,7 @@ def createMenu(cnx, cursor):
             exit(1)
 
 def readMenu(cursor):
-    cursor.execute("select category, name, rate from menu where quantity_available > 0")
+    cursor.execute("select category, name, rate, id from menu where quantity_available > 0")
     output = cursor.fetchall()
     if output == []:
         return -1
@@ -105,7 +105,7 @@ def updateCart(cnx, cursor, record):
     return 0
 
 def readCart(cursor):
-    cursor.execute("select category, name, rate, quantity from cart where quantity > 0")
+    cursor.execute("select category, name, rate, quantity, id from cart where quantity > 0")
     output = cursor.fetchall()
     if output == []:
         return -1
