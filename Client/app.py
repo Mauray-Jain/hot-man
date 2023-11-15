@@ -38,12 +38,12 @@ class App(tk.Tk):
     @staticmethod
     def getStyle() -> ttk.Style:
         st = ttk.Style()
-        st.configure('mainPage.TButton', font=('Times New Roman', 32))
-        st.configure('h0.TEntry', font=('Times New Roman', 32))
-        st.configure('h0.TLabel', font=('Times New Roman', 32))
-        st.configure('h1.TLabel', font=('Times New Roman', 24))
+        st.configure('mainPage.TButton', font=('Times New Roman', 28))
+        st.configure('h0.TEntry', font=('Times New Roman', 28))
+        st.configure('h0.TLabel', font=('Times New Roman', 28))
+        st.configure('h1.TLabel', font=('Times New Roman', 22))
         st.configure('h2.TLabel', font=('Times New Roman', 18))
-        st.configure('h1.TButton', font=('Times New Roman', 24))
+        st.configure('h1.TButton', font=('Times New Roman', 22))
         st.configure('h2.TButton', font=('Times New Roman', 18))
         return st
 
@@ -64,6 +64,12 @@ class App(tk.Tk):
         if self.pages[self.curPage] is None:
             self.createPage(pageNo)
         self.pages[self.curPage].pack(ipadx=self.width, ipady=self.height)
+
+    def updateCart(self):
+        self.pages[22].destroy()
+        del self.pages[22]
+        self.pages[22] = None
+        self.switch(22, False)
 
     def openPopup(self, popupno: int) -> None:
         pass
@@ -87,13 +93,13 @@ class App(tk.Tk):
         #     raise 'otp not send properly'
         recv(self.sock)
 
-    def addToCart(self, x) -> None:
+    def addToCart(self, x, remove=False) -> None:
         print(f'adding {x} to cart')
-        x += {"user": self.phno}
-        send(self.sock, {"type": "Database", "query": {"type": "Update", "table": "cart", "content": x}})
-        # if recv(self.sock)['type'] == 'error':
-        #     raise 'couldn\'t add to cart please try again'
-        recv(self.sock)
+        query = {"type": "Database", "query": {"type": "Update", "table": "cart",
+                                               "content": {'name': x, 'user': self.phno, 'quantity': (1, -1)[remove]}}}
+        send(self.sock, query)
+        if recv(self.sock)['status'] == 'Invalid':
+            raise 'couldn\'t add to cart please try again'
 
     def createPage(self, pageNo: int = 0):
         self.pages[pageNo] = self.pageCreatorPrototypes[pageNo]()
@@ -274,7 +280,7 @@ class App(tk.Tk):
         pageObj.pack(anchor='nw', ipadx=self.width, ipady=self.width, padx=0, pady=0)
         return pageparentobj
 
-    def getHeader(self, text: str, parent: Page | ttk.Frame, canKart=True) -> ttk.Frame:
+    def getHeader(self, text: str, parent: Page | ttk.Frame | FrameWithScrollBar, canKart=True) -> ttk.Frame:
         pageObj = ttk.Frame(master=parent)
         ttk.Button(
             master=pageObj,
@@ -304,5 +310,69 @@ class App(tk.Tk):
 
     def makeCart(self) -> Page:
         pageObj = Page(self, 'yourHonor')
-        self.getHeader('yourHonor', pageObj, False).pack(ipadx=self.width, ipady=60)
+        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "cart", "content": ""}})
+        rawData = recv(self.sock)['content']
+        data = []
+        for i in rawData:
+            data += rawData[i]
+        fws = FrameWithScrollBar(pageObj, self)
+        self.getHeader('yourHonor', fws, False).pack(ipadx=self.width, ipady=50)
+        cartTable = ttk.Frame(fws)
+        cartTable.columnconfigure(0, weight=3, uniform='0')  # name
+        cartTable.columnconfigure(1, weight=1, uniform='1')  # price
+        cartTable.columnconfigure(2, weight=1, uniform='2')  # decrease
+        cartTable.columnconfigure(3, weight=1, uniform='3')  # quantity
+        cartTable.columnconfigure(4, weight=1, uniform='4')  # increase
+        cartTable.rowconfigure(0, weight=2)  # title
+        for i in range(len(data)):
+            cartTable.rowconfigure(i + 1, weight=1)
+        ttk.Label(
+            master=cartTable,
+            text='Name',
+            style='h1.TLabel'
+        ).grid(row=0, column=0, padx=0, pady=20, ipadx=0, ipady=20)
+        ttk.Label(
+            master=cartTable,
+            text='Price',
+            style='h1.TLabel'
+        ).grid(row=0, column=1, padx=0, pady=20, ipadx=0, ipady=20)
+        ttk.Label(
+            master=cartTable,
+            text='Quantity',
+            style='h1.TLabel'
+        ).grid(row=0, column=2, columnspan=3, padx=0, pady=20, ipadx=0, ipady=20)
+        rowno: int = 0
+        for rowdt in data:
+            rowno += 1
+            ttk.Label(
+                master=cartTable,
+                text=rowdt[0],
+                style='h2.TLabel'
+            ).grid(row=rowno, column=0, padx=0, pady=0, ipadx=0, ipady=20)
+            ttk.Label(
+                master=cartTable,
+                text=rowdt[1],
+                style='h2.TLabel'
+            ).grid(row=rowno, column=1, padx=0, pady=0, ipadx=0, ipady=20)
+            ttk.Button(
+                master=cartTable,
+                text='less',
+                style='h2.TButton',
+                command=lambda _self=self, x=rowdt: _self.addToCart(x=x[3], remove=True) or _self.updateCart()
+                #  jank hack that works
+            ).grid(row=rowno, column=2, pady=10, ipady=20)
+            ttk.Label(
+                master=cartTable,
+                text=rowdt[2],
+                style='h2.TLabel'
+            ).grid(row=rowno, column=3, padx=0, pady=0, ipadx=0, ipady=20)
+            ttk.Button(
+                master=cartTable,
+                text='more',
+                style='h2.TButton',
+                command=lambda _self=self, x=rowdt: _self.addToCart(x=x[0]) or _self.updateCart()
+                #                                                              |^| jank hack that works
+            ).grid(row=rowno, column=4, pady=10, ipady=20)
+        cartTable.pack(ipadx=self.width, anchor=tk.NW)
+        fws.pack(ipadx=self.width, expand=True, anchor=tk.NW)
         return pageObj
