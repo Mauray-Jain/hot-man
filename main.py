@@ -17,6 +17,9 @@ if __name__ == '__main__':
     app = App(s)
     app.mainloop()
 
+    # for i in range(200):
+    #     send(s, {"type": "Database", "query": {"type": "Delete", "table": "cart", "content": {"id": i}}})
+    #     recv(s)
     # Testing
     # send(s, {"type": "Database", "query": {"type": "Update", "table": "cart", "content": {"name": "Paneer Tikka", "user": 9897198971}}})
     # print(recv(s))
