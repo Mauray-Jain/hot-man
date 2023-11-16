@@ -79,7 +79,7 @@ menu = [
 
 tables["cart"] = (
     "create table `cart`("
-    "   `id` int(5) primary key,"
+    "   `id` int(5),"
     "   `user` bigint(10) not null,"
     "   `name` varchar(100) not null,"
     "   `category` varchar(20) not null,"

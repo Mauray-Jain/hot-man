@@ -22,7 +22,7 @@ def handleDB(cnx, cursor, req):
             menu = readMenu(cursor)
             return menu
         elif table == config["cart"]:
-            cart = readCart(cursor)
+            cart = readCart(cursor, content["user"])
             return cart
     elif typeOfOperation == "Update":
         if table == config["cart"]:

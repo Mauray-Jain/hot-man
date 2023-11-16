@@ -314,7 +314,7 @@ class App(tk.Tk):
 
     def makeCart(self) -> Page:
         pageObj = Page(self, 'yourHonor')
-        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "cart", "content": ""}})
+        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "cart", "content": {"user": self.phno}}})
         rawData = recv(self.sock)['content']
         data = []
         for i in rawData:

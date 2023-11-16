@@ -67,8 +67,19 @@ def readMenu(cursor):
         obj[i[0]].append(i[1:])
     return obj
 
+def clearCart(cnx, cursor):
+    cursor.execute("select id from cart")
+    earlier = cursor.fetchone()
+    if earlier is not None:
+        cursor.execute("delete from cart")
+        cnx.commit()
+
 def updateCart(cnx, cursor, record):
-    cursor.execute("select category, name, rate, quantity from cart")
+    try:
+        cursor.execute(f"select category, name, rate, quantity from cart where user = {record['user']}")
+    except KeyError:
+        print("No number")
+        return -1
     output = cursor.fetchall()
     names = [i[0] for i in menu]
     categories = [i[1] for i in menu]
@@ -104,8 +115,8 @@ def updateCart(cnx, cursor, record):
             return -1
     return 0
 
-def readCart(cursor):
-    cursor.execute("select category, name, rate, quantity, id from cart where quantity > 0")
+def readCart(cursor, user):
+    cursor.execute(f"select category, name, rate, quantity, id from cart where user = {user} and quantity > 0")
     output = cursor.fetchall()
     if output == []:
         return -1
@@ -115,10 +126,11 @@ def readCart(cursor):
         if i[0] not in obj:
             obj[i[0]] = []
         obj[i[0]].append(i[1:])
+    obj["Total"] = getTotal(cursor, user)
     return obj
 
-def getTotal(cursor):
-    cursor.execute("select rate, quantity from cart")
+def getTotal(cursor, user):
+    cursor.execute(f"select rate, quantity from cart where user = {user}")
     output = cursor.fetchall()
     if output == []:
         return 0
