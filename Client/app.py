@@ -61,6 +61,10 @@ class App(tk.Tk):
         if not (self.pages[self.curPage] is None):
             self.pages[self.curPage].pack_forget()
         self.curPage = pageNo
+        if pageNo == 22 and not self.pages[22] == None:
+            self.pages[22].destroy()
+            del self.pages[22]
+            self.pages[22] = None
         if self.pages[self.curPage] is None:
             self.createPage(pageNo)
         self.pages[self.curPage].pack(ipadx=self.width, ipady=self.height)
@@ -358,7 +362,7 @@ class App(tk.Tk):
                 master=cartTable,
                 text='less',
                 style='h2.TButton',
-                command=lambda _self=self, x=rowdt: _self.addToCart(x=x[3], remove=True) or _self.updateCart()
+                command=lambda _self=self, x=rowdt: _self.addToCart(x=x[0], remove=True) or _self.updateCart()
                 #  jank hack that works
             ).grid(row=rowno, column=2, pady=10, ipady=20)
             ttk.Label(

@@ -4,9 +4,61 @@ A simple hotel manger app
 Credits:
 icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 
+<h1> TODO </h1>
+<h2> frontend </h2>
 
-Menu::
-# Starters
+- scrolling for cart
+- menu alignment
+- stuff other stuff
+- buy/place order page
+- clearing of cart
+- the bug where having an empty cart causes a crash
+- the bug where going back from cart is nigh impossible
+- popups
+- constrains on phone no and otp fields
+- focus shifting with tab
+
+<h2> backend </h2>
+
+- different number different cart
+- taxes
+- call a waiter
+- order history
+
+<h1> Build Instructions</h1>
+
+- download sql
+- start sql server
+- run back.py
+- enter sql credentials
+- run main.py
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+<h1> MENU </h1>
+<h6>
+
+Starters
 - paneer tikka
 - dahi kebab
 - hara bhara kabab
@@ -15,7 +67,7 @@ Menu::
 - seekh kebab
 - mushroom
 
-# sabji(mujhe sirf paneer pata hai)
+sabji(mujhe sirf paneer pata hai)
 - Malai Paneer
 - palak paneer
 - paneer bhurji
@@ -27,15 +79,15 @@ Menu::
 - <em>paneer andheri
 - toofani paneer</em>
 
-# Daal
+Daal
 - daal makhni
 - daal tadka
 
-# north indian
+north indian
 - chole bhature
 - pav bhaji(is it tho pata nahi)
 
-# South indian
+South indian
 - plain dosa
 - masala dosa
 - paneer dosa
@@ -43,14 +95,14 @@ Menu::
 - bhagta hua smabhar
 - tired sambhar
 
-# chinese
+chinese
 - manchow noodles
 - other thicker noodles
 - chilli paneer
 - honey chilli potsto
 - manchurian
 
-# italian
+italian
 - cheesy pizza
 - corn and cheese pizza
 - farmhouse pizza
@@ -61,14 +113,14 @@ Menu::
 - white macaroni
 - other less racist pasta
 
-# rice
+rice
 - rice
 - pulao
 - biryani
 - tomato rice
 - lemon grass rice
 
-# breakfast
+breakfast
 - veg sandwitch
 - cheese and tomato sandwitch
 - ketchup and mayonaise sandwitch
@@ -77,7 +129,7 @@ Menu::
 - paneer parontha
 - pyaz parontha
 
-# momos
+momos
 - tandori momo
 - steamed momo
 - fried momo
@@ -106,7 +158,7 @@ Menu::
 - fortune momo(like fortune cokkies but momo me)
 - non-alchoholic, non-psycodelic momo
 
-# aloo
+aloo
 - tandoori aloo
 - dum aloo
 - vada pav
@@ -114,12 +166,12 @@ Menu::
 - vggie burger
 - double tikki burger
 
-# Garlic bread
+Garlic bread
 - normal dominoes style
 - stuffed dominoes style
 - normal pizza hut style
 
- # Bread
+Bread
  - rumali roti
  - missi roti
  - tandoori roti
@@ -128,3 +180,4 @@ Menu::
  - garlic naan
  - paneer naan
  - stuffed naan
+</h6>
