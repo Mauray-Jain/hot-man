@@ -1,5 +1,5 @@
 # hotel-manager
-A simple hotel manger app
+A simple hotel manager app
 
 Credits:
 icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
@@ -13,7 +13,6 @@ icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 - buy/place order page
 - clearing of cart
 - the bug where having an empty cart causes a crash
-- the bug where going back from cart is nigh impossible
 - popups
 - constrains on phone no and otp fields
 - focus shifting with tab
@@ -56,7 +55,6 @@ icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 
 
 <h1> MENU </h1>
-<h6>
 
 Starters
 - paneer tikka
@@ -180,4 +178,3 @@ Bread
  - garlic naan
  - paneer naan
  - stuffed naan
-</h6>

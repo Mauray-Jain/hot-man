@@ -10,7 +10,7 @@ class FrameWithScrollBar(tk.Canvas):
         self.fr = tk.Frame(self)
         self.fr.bind(
             "<Configure>",
-            lambda e:self.configure(
+            lambda e: self.configure(
                 scrollregion=self.bbox('all')
             )
         )

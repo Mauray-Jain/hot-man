@@ -73,7 +73,7 @@ class App(tk.Tk):
         self.pages[22].destroy()
         del self.pages[22]
         self.pages[22] = None
-        self.switch(22, False)
+        self.switch(22, False, True)
 
     def openPopup(self, popupno: int) -> None:
         pass
@@ -184,7 +184,7 @@ class App(tk.Tk):
         ).pack(
             pady=(15, 5)
         )
-        phoneNumber = tk.StringVar()
+        phoneNumber = tk.IntVar()
         ttk.Entry(master=pageObj, textvariable=phoneNumber, style='h0.TEntry').pack(
             ipady=5,
             ipadx=60,
@@ -320,7 +320,10 @@ class App(tk.Tk):
         for i in rawData:
             data += rawData[i]
         fws = FrameWithScrollBar(pageObj, self)
-        self.getHeader('yourHonor', fws, False).pack(ipadx=self.width, ipady=50)
+        fws.rowconfigure(0)
+        fws.rowconfigure(1)
+        fws.columnconfigure(0)
+        self.getHeader('yourHonor', fws, False).grid(row=0, column=0, sticky='w', ipadx=267)
         cartTable = ttk.Frame(fws)
         cartTable.columnconfigure(0, weight=3, uniform='0')  # name
         cartTable.columnconfigure(1, weight=1, uniform='1')  # price
@@ -377,6 +380,6 @@ class App(tk.Tk):
                 command=lambda _self=self, x=rowdt: _self.addToCart(x=x[0]) or _self.updateCart()
                 #                                                              |^| jank hack that works
             ).grid(row=rowno, column=4, pady=10, ipady=20)
-        cartTable.pack(ipadx=self.width, anchor=tk.NW)
-        fws.pack(ipadx=self.width, expand=True, anchor=tk.NW)
+        cartTable.grid(row=1, column=0, ipadx=267, sticky='w')
+        fws.pack(ipadx=self.width, fill='both', anchor=tk.NW)
         return pageObj
