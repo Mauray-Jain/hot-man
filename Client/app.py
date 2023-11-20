@@ -19,7 +19,7 @@ class App(tk.Tk):
         self.pageCreatorPrototypes = {
             0: self.makeStartPage,
             # 11: self.makeSignIn,                    # depreciated
-            2: self.makeSignUp,
+            # 2: self.makeSignUp,                     # bhap
             1: self.makeSignInOtp,
             21: self.makeMenu,
             22: self.makeCart
@@ -39,8 +39,10 @@ class App(tk.Tk):
     def getStyle() -> ttk.Style:
         st = ttk.Style()
         st.configure('mainPage.TButton', font=('Times New Roman', 28))
+        st.configure('h-1.TLabel', font=('Times New Roman', 38))
         st.configure('h0.TEntry', font=('Times New Roman', 28))
         st.configure('h0.TLabel', font=('Times New Roman', 28))
+        st.configure('h0.TButton', font=('Times New Roman', 38))
         st.configure('h1.TLabel', font=('Times New Roman', 22))
         st.configure('h2.TLabel', font=('Times New Roman', 18))
         st.configure('h1.TButton', font=('Times New Roman', 22))
@@ -61,7 +63,7 @@ class App(tk.Tk):
         if not (self.pages[self.curPage] is None):
             self.pages[self.curPage].pack_forget()
         self.curPage = pageNo
-        if pageNo == 22 and not self.pages[22] == None:
+        if pageNo == 22 and not self.pages[22] is None:
             self.pages[22].destroy()
             del self.pages[22]
             self.pages[22] = None
@@ -82,12 +84,11 @@ class App(tk.Tk):
     def staffLogin():
         print('switch to staff site')
 
-    def validateSignIn(self, number, passwd):
-        print('checking credentials ....')
-        print(number.get(), '\t:\t', passwd.get())
-        print('if fine: switch, else : popup(message)')
+    def validateSignIn(self, number):
         self.phno = number.get()
-        self.switch(21)
+        n = len(str(self.phno))
+        if n == 10:
+            self.switch(21)
 
     def sendOtp(self, number) -> None:
         num: int = number.get()
@@ -119,50 +120,27 @@ class App(tk.Tk):
             anchor=tk.CENTER,
             padx=20,
             pady=80)
+        ttk.Frame(master=startPage).pack(ipady=60)
         ttk.Button(master=startPage,
                    text='Sign In',
-                   style='mainPage.TButton',
+                   style='h0.TButton',
                    command=lambda: self.switch(1)
-                   ).pack(
-            anchor=tk.CENTER,
-            padx=20,
-            pady=10)
-        ttk.Button(master=startPage,
-                   text='Sign Up',
-                   style='mainPage.TButton',
-                   command=lambda: self.switch(2)
                    ).pack(
             anchor=tk.CENTER,
             padx=20,
             pady=10)
         return startPage
 
-    def makeSignUp(self) -> Page:
-        pageObj = Page(self, 'pageObj')
-        ttk.Button(
-            master=pageObj,
-            text='back',
-            command=self.goBack).pack()
-        name = tk.StringVar()
-        ttk.Label(master=pageObj, text='Name').pack()
-        ttk.Entry(master=pageObj, textvariable=name).pack()
-        phoneNumber = tk.IntVar()
-        ttk.Label(master=pageObj, text='phoneNumber').pack()
-        ttk.Entry(master=pageObj, textvariable=phoneNumber).pack()
-        password = tk.StringVar()
-        ttk.Label(master=pageObj, text='Password').pack()
-        ttk.Entry(master=pageObj, textvariable=password).pack()
-        confirnPassword = tk.StringVar()
-        ttk.Label(master=pageObj, text='confirnPassword').pack()
-        ttk.Entry(master=pageObj, textvariable=confirnPassword).pack()
-        otp = tk.IntVar()
-        ttk.Button(master=pageObj,
-                   text='(re)send otp',
-                   command=lambda num=phoneNumber, calable=self: calable.
-                   sendOtp(num)).pack()
-        ttk.Label(master=pageObj, text='otp').pack()
-        ttk.Entry(master=pageObj, textvariable=otp).pack()
-        return pageObj
+    def validate(self, action, index, value_if_allowed,
+                 prior_value, text, validation_type, trigger_type, widget_name):
+        if value_if_allowed:
+            try:
+                int(value_if_allowed)
+                return True
+            except ValueError:
+                return False
+        else:
+            return False
 
     def makeSignInOtp(self) -> Page:
         pageObj = Page(self, 'sign in')
@@ -185,35 +163,38 @@ class App(tk.Tk):
             pady=(15, 5)
         )
         phoneNumber = tk.IntVar()
-        ttk.Entry(master=pageObj, textvariable=phoneNumber, style='h0.TEntry').pack(
+        vcmd = (self.register(self.validate),
+                '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        ttk.Entry(master=pageObj, textvariable=phoneNumber, style='h0.TEntry', validate='key',
+                  validatecommand=vcmd).pack(
             ipady=5,
             ipadx=60,
             pady=15
         )
-        ttk.Label(
-            master=pageObj,
-            text='otp',
-            style='h0.TLabel'
-        ).pack(
-            pady=(15, 5)
-        )
-        otp = tk.IntVar()
-        ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(
-            ipady=5,
-            ipadx=60,
-            pady=15)
+        # ttk.Label(
+        #     master=pageObj,
+        #     text='otp',
+        #     style='h0.TLabel'
+        # ).pack(
+        #     pady=(15, 5)
+        # )
+        # otp = tk.IntVar()
+        # ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(                  BHAPPPPPP
+        #     ipady=5,
+        #     ipadx=60,
+        #     pady=15)
 
         ttk.Frame(master=pageObj).pack(pady=40)
         buttonBox = ttk.Frame(master=pageObj)
-        ttk.Button(master=buttonBox,
-                   text='send otp',
-                   style='mainPage.TButton',
-                   command=lambda num=phoneNumber, callable=self: callable.sendOtp(phoneNumber)
-                   ).pack(pady=40, padx=20, anchor=tk.S, side=tk.LEFT)
+        # ttk.Button(master=buttonBox,
+        #            text='send otp',
+        #            style='mainPage.TButton',
+        #            command=lambda num=phoneNumber, callable=self: callable.sendOtp(phoneNumber)      BHAPPPPPP
+        #            ).pack(pady=40, padx=20, anchor=tk.S, side=tk.LEFT)
         ttk.Button(master=buttonBox,
                    text='sign in',
                    style='mainPage.TButton',
-                   command=lambda _self=self, num=phoneNumber, pwd=otp: _self.validateSignIn(num, pwd)
+                   command=lambda _self=self, num=phoneNumber: _self.validateSignIn(num)
                    ).pack(
             pady=40,
             padx=20,
@@ -284,7 +265,8 @@ class App(tk.Tk):
         pageObj.pack(anchor=tk.NW, ipadx=self.width, ipady=self.width, padx=0, pady=0)
         return pageparentobj
 
-    def getHeader(self, text: str, parent: Page | ttk.Frame | FrameWithScrollBar, canKart=True) -> ttk.Frame:
+    def getHeader(self, text: str, parent: Page | ttk.Frame | FrameWithScrollBar, canKart=True,
+                  removePlaceOrder=False) -> ttk.Frame:
         pageObj = ttk.Frame(master=parent)
         ttk.Button(
             master=pageObj,
@@ -310,45 +292,65 @@ class App(tk.Tk):
                 style='mainPage.TButton',
                 command=lambda: self.switch(22)
             ).pack(anchor=tk.NE)
+        elif not removePlaceOrder:
+            ttk.Button(
+                master=pageObj,
+                text='Place Order',
+                style='mainPage.TButton',
+                command=lambda: self.placeOrder()
+            ).pack(anchor=tk.NE)
         return pageObj
 
     def makeCart(self) -> Page:
         pageObj = Page(self, 'yourHonor')
-        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "cart", "content": {"user": self.phno}}})
-        rawData = recv(self.sock)['content']
-        data = []
+        send(self.sock, {"type": "Database", "query": {"type": "Read", "table": "cart",
+                                                       "content": {"user": self.phno}}})
+        try:
+            rawData = recv(self.sock)['content']
+        except:
+            rawData: dict = {'Total': 0}
+        data: list = []
+        totalCost: int = 0
         for i in rawData:
-            data += rawData[i]
-        fws = FrameWithScrollBar(pageObj, self)
-        fws.rowconfigure(0)
-        fws.rowconfigure(1)
-        fws.columnconfigure(0)
-        self.getHeader('yourHonor', fws, False).grid(row=0, column=0, sticky='w', ipadx=267)
-        cartTable = ttk.Frame(fws)
+            if i == 'Total':
+                totalCost = rawData[i]
+            else:
+                data += rawData[i]
+            # data += i
+        if len(rawData) == 1:
+            self.getHeader('Cart', pageObj, False, removePlaceOrder=True).place(x=0, y=0, width=1080)
+            ttk.Label(master=pageObj,
+                      text='Your Cart is Empty',
+                      style='h-1.TLabel'
+                      ).place(x=350, y=300)
+            return pageObj
+        cartTable = ttk.Frame(pageObj)
+        self.getHeader('Cart', cartTable, False).grid(row=0, column=0, columnspan=5, sticky='w', ipadx=288)
         cartTable.columnconfigure(0, weight=3, uniform='0')  # name
         cartTable.columnconfigure(1, weight=1, uniform='1')  # price
         cartTable.columnconfigure(2, weight=1, uniform='2')  # decrease
         cartTable.columnconfigure(3, weight=1, uniform='3')  # quantity
         cartTable.columnconfigure(4, weight=1, uniform='4')  # increase
         cartTable.rowconfigure(0, weight=2)  # title
-        for i in range(len(data)):
-            cartTable.rowconfigure(i + 1, weight=1)
+        cartTable.rowconfigure(1, weight=2)  # title
+        for i in range(len(data) + 1):
+            cartTable.rowconfigure(i + 2, weight=1)
         ttk.Label(
             master=cartTable,
             text='Name',
             style='h1.TLabel'
-        ).grid(row=0, column=0, padx=0, pady=20, ipadx=0, ipady=20)
+        ).grid(row=1, column=0, padx=0, pady=20, ipadx=0, ipady=20)
         ttk.Label(
             master=cartTable,
             text='Price',
             style='h1.TLabel'
-        ).grid(row=0, column=1, padx=0, pady=20, ipadx=0, ipady=20)
+        ).grid(row=1, column=1, padx=0, pady=20, ipadx=0, ipady=20)
         ttk.Label(
             master=cartTable,
             text='Quantity',
             style='h1.TLabel'
-        ).grid(row=0, column=2, columnspan=3, padx=0, pady=20, ipadx=0, ipady=20)
-        rowno: int = 0
+        ).grid(row=1, column=2, columnspan=3, padx=0, pady=20, ipadx=0, ipady=20)
+        rowno: int = 1
         for rowdt in data:
             rowno += 1
             ttk.Label(
@@ -380,6 +382,22 @@ class App(tk.Tk):
                 command=lambda _self=self, x=rowdt: _self.addToCart(x=x[0]) or _self.updateCart()
                 #                                                              |^| jank hack that works
             ).grid(row=rowno, column=4, pady=10, ipady=20)
-        cartTable.grid(row=1, column=0, ipadx=267, sticky='w')
-        fws.pack(ipadx=self.width, fill='both', anchor=tk.NW)
+        rowno += 1
+        ttk.Label(
+            master=cartTable,
+            text='total',
+            style='h2.TLabel'
+        ).grid(row=rowno, column=0, columnspan=2, padx=0, pady=0, ipadx=0, ipady=20)
+        ttk.Label(
+            master=cartTable,
+            text=totalCost,
+            style='h2.TLabel'
+        ).grid(row=rowno, column=2, columnspan=3, padx=0, pady=0, ipadx=0, ipady=20)
+        cartTable.pack(ipadx=self.width, fill='both', anchor=tk.NW)
         return pageObj
+
+    def placeOrder(self):
+        req = {"type": "Database", "query": {"type": "Update", "table": "orders", "content": {'user': self.phno}}}
+        send(self.sock, req)
+        if recv(self.sock)['status'] == 'Invalid':
+            raise 'Connection error cannot add to order'
