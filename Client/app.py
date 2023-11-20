@@ -49,14 +49,7 @@ class App(tk.Tk):
         st.configure('h2.TButton', font=('Times New Roman', 18))
         return st
 
-    def switch(self,
-               pageNo: int,
-               popup: bool = False,
-               bake: bool = False) -> None:
-        if popup:
-            print('Popup no :', pageNo)
-            self.openPopup(pageNo)
-            return
+    def switch(self, pageNo: int, bake: bool = False) -> None:
         if not bake:
             self.back.append(self.curPage)
         # self.back.append(self.curPage)
@@ -75,28 +68,13 @@ class App(tk.Tk):
         self.pages[22].destroy()
         del self.pages[22]
         self.pages[22] = None
-        self.switch(22, False, True)
-
-    def openPopup(self, popupno: int) -> None:
-        pass
-
-    @staticmethod
-    def staffLogin():
-        print('switch to staff site')
+        self.switch(22, True)
 
     def validateSignIn(self, number):
         self.phno = number.get()
         n = len(str(self.phno))
         if n == 10:
             self.switch(21)
-
-    def sendOtp(self, number) -> None:
-        num: int = number.get()
-        print('send otp to', num)
-        send(self.sock, {"type": "Otp", "number": num})
-        # if recv(self.sock)['type'] == 'error':
-        #     raise 'otp not send properly'
-        recv(self.sock)
 
     def addToCart(self, x, remove=False) -> None:
         print(f'adding {x} to cart')
@@ -171,26 +149,8 @@ class App(tk.Tk):
             ipadx=60,
             pady=15
         )
-        # ttk.Label(
-        #     master=pageObj,
-        #     text='otp',
-        #     style='h0.TLabel'
-        # ).pack(
-        #     pady=(15, 5)
-        # )
-        # otp = tk.IntVar()
-        # ttk.Entry(master=pageObj, textvariable=otp, style='h0.TEntry').pack(                  BHAPPPPPP
-        #     ipady=5,
-        #     ipadx=60,
-        #     pady=15)
-
         ttk.Frame(master=pageObj).pack(pady=40)
         buttonBox = ttk.Frame(master=pageObj)
-        # ttk.Button(master=buttonBox,
-        #            text='send otp',
-        #            style='mainPage.TButton',
-        #            command=lambda num=phoneNumber, callable=self: callable.sendOtp(phoneNumber)      BHAPPPPPP
-        #            ).pack(pady=40, padx=20, anchor=tk.S, side=tk.LEFT)
         ttk.Button(master=buttonBox,
                    text='sign in',
                    style='mainPage.TButton',

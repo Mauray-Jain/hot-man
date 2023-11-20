@@ -7,14 +7,7 @@ icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 <h1> TODO </h1>
 <h2> frontend </h2>
 
-- scrolling for cart
 - menu alignment
-- stuff other stuff
-- buy/place order page
-- clearing of cart
-- the bug where having an empty cart causes a crash
-- popups
-- constrains on phone no and otp fields
 - focus shifting with tab
 - 
 
