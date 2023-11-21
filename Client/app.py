@@ -361,3 +361,4 @@ class App(tk.Tk):
         send(self.sock, req)
         if recv(self.sock)['status'] == 'Invalid':
             raise 'Connection error cannot add to order'
+        self.updateCart()
