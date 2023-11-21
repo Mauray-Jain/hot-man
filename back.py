@@ -21,7 +21,6 @@ createDB(cnx, cursor, config["database"])
 for i in tables:
     createTable(cursor, tables[i])
 createMenu(cnx, cursor)
-clearCart(cnx, cursor)
 
 # Accept
 def accept_connection(s):

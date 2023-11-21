@@ -13,9 +13,6 @@ icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 
 <h2> backend </h2>
 
-- different number different cart
-- taxes
-- call a waiter
 - order history
 
 <h1> Build Instructions</h1>

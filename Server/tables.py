@@ -88,11 +88,20 @@ tables["cart"] = (
     ")"
 )
 
+tables["orders"] = (
+    "create table `orders`("
+    "   `id` int(5),"
+    "   `user` bigint(10) not null,"
+    "   `name` varchar(100) not null,"
+    "   `category` varchar(20) not null,"
+    "   `rate` int(4) not null,"
+    "   `quantity` int(5) not null"
+    ")"
+)
+
 config = {
     "user" : "",
     "password" : "",
     "host" : "::1",
-    "database" : "hotman",
-    "menu" : "menu",
-    "cart" : "cart"
+    "database" : "restman",
 }

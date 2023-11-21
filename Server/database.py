@@ -43,16 +43,18 @@ def createRecord(cnx, cursor, table_name, fields, values):
 def deleteRecord(cnx, cursor, table, record):
     cursor.execute(f"delete from {table} where id = {record['id']}")
     cnx.commit()
+    return 0
 
 def createMenu(cnx, cursor):
     cursor.execute("select id from menu where id=1")
     earlier_menu = cursor.fetchone()
     if earlier_menu is not None:
-        return
+        return 0
     for i in menu:
         if createRecord(cnx, cursor, "menu", ("name", "category", "rate", "quantity_available"), i) == -1:
             print("Error creating menu")
             exit(1)
+    return 0
 
 def readMenu(cursor):
     cursor.execute("select category, name, rate, id from menu where quantity_available > 0")
@@ -66,13 +68,6 @@ def readMenu(cursor):
             obj[i[0]] = []
         obj[i[0]].append(i[1:])
     return obj
-
-def clearCart(cnx, cursor):
-    cursor.execute("select id from cart")
-    earlier = cursor.fetchone()
-    if earlier is not None:
-        cursor.execute("delete from cart")
-        cnx.commit()
 
 def updateCart(cnx, cursor, record):
     try:
@@ -107,7 +102,7 @@ def updateCart(cnx, cursor, record):
     namesInCart = [i[1] for i in output]
     print("cart:", namesInCart)
     if record["name"] in namesInCart:
-        cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where id = {record['id']}")
+        cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where id = {record['id']} and user = {record['user']}")
         cnx.commit()
     else:
         if createRecord(cnx, cursor, "cart", (), record) == -1:
@@ -139,3 +134,23 @@ def getTotal(cursor, user):
         for i in output:
             sum += i[0] * i[1]
         return sum
+
+def placeOrder(cursor, cnx, user):
+    cursor.execute(f"select * from cart where user = {user} and quantity > 0")
+    output = cursor.fetchall()
+    if output == []:
+        return -1
+
+    namesInOrders = [i[1] for i in output]
+    for i in output:
+        if i[2] in namesInOrders:
+            cursor.execute(f"update cart set quantity = quantity + {i[5]} where id = {i[0]} and user = {user}")
+        else:
+            if createRecord(cnx, cursor, "orders", ("id", "user", "name", "category", "rate", "quantity"), i) == -1:
+                print("Error creating record")
+                return -1
+        cursor.execute(f"update menu set quantity_available = quantity_available - {i[5]} where id = {i[0]}")
+
+    cursor.execute(f"delete from cart where user = {user}")
+    cnx.commit()
+    return 0
