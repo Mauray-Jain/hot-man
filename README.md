@@ -9,7 +9,7 @@ icon - https://pixabay.com/illustrations/black-hat-design-icon-sign-2516434/
 
 - menu alignment
 - focus shifting with tab
-- 
+- show empty cart on place order
 
 <h2> backend </h2>
 
