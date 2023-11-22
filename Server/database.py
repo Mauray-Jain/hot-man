@@ -22,7 +22,7 @@ def createTable(cursor, table_desc):
         cursor.execute(table_desc)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("existing")
+            pass
         else:
             print(err.msg)
 
@@ -100,7 +100,6 @@ def updateCart(cnx, cursor, record):
         return 0
 
     namesInCart = [i[1] for i in output]
-    print("cart:", namesInCart)
     if record["name"] in namesInCart:
         cursor.execute(f"update cart set quantity = quantity + {record['quantity']} where id = {record['id']} and user = {record['user']}")
         cnx.commit()

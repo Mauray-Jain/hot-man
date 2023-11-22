@@ -25,7 +25,7 @@ createMenu(cnx, cursor)
 # Accept
 def accept_connection(s):
     connection, address = s.accept()
-    print(f"Connection mili gawa {address}")
+    print(f"Got connection from {address}")
     s.setblocking(False)
     data = types.SimpleNamespace(addr=address, inb=b"", outb=b"")
     eventMask = selectors.EVENT_READ | selectors.EVENT_WRITE
@@ -50,14 +50,13 @@ def service_connection(key, mask):
                     data.outb = {"status": "Success", "content": output}
     if mask & selectors.EVENT_WRITE:  # Ready to write
         if data.outb:
-            print(f"Echoing {data.outb!r} to {data.addr}")
             send(sock, data.outb)
             data.outb = b''
 
 s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen()
-print(f"Sun raha hai na tu ro raha hoon main at {HOST} and {PORT}")
+print(f"Host: {HOST} Port: {PORT}")
 s.setblocking(False)
 selector.register(s, selectors.EVENT_READ, data=None)
 
@@ -70,7 +69,7 @@ try:
             else:
                 service_connection(key, mask)
 except KeyboardInterrupt:
-    print("Buhbye")
+    print("Closing server")
 finally:
     selector.close()
     cursor.close()

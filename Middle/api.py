@@ -12,8 +12,5 @@ def recv(s: socket.socket):
     if not obj:
         return 0
     obj = obj.decode()
-    # obj = obj[:-1].split('}')
-    # obj = "},".join(obj)
-    # obj = '[' + obj + ']'
     objParsed = json.loads(obj)
     return objParsed
