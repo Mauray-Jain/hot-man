@@ -135,8 +135,8 @@ class App(tk.Tk):
         ttk.Frame(master=pageObj).pack(pady=40)
         ttk.Label(
             master=pageObj,
-            text='Number',
-            style='h0.TLabel'
+            text='Enter 10 Digit Phone Number',
+            style='h1.TLabel'
         ).pack(
             pady=(15, 5)
         )
