@@ -50,8 +50,6 @@ menu = [
     ("Tandoori Momos", "Chinese", 70, 300),
     ("Fried Momos", "Chinese", 70, 300),
     ("Paneer Momos", "Chinese", 70, 300),
-    ("Steamed Momos", "Chinese", 70, 300),
-    ("Steamed Momos", "Chinese", 70, 300),
 
     ("Rice", "Rice", 100, 300),
     ("Fried Rice", "Rice", 150, 300),
