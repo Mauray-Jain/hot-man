@@ -77,7 +77,6 @@ class App(tk.Tk):
             self.switch(21)
 
     def addToCart(self, x, remove=False) -> None:
-        print(f'adding {x} to cart')
         query = {"type": "Database", "query": {"type": "Update", "table": "cart",
                                                "content": {'name': x, 'user': self.phno, 'quantity': (1, -1)[remove]}}}
         send(self.sock, query)
@@ -204,7 +203,7 @@ class App(tk.Tk):
             ).grid(row=curow, column=2, pady=10)
         return foodBox
 
-    def makeMenu(self) -> Page | FrameWithScrollBar:
+    def makeMenu(self):
         pageparentobj = Page(self, 'Menu')
         pageObj = FrameWithScrollBar(pageparentobj, self)
         pageObj.columnconfigure(0, weight=1)
@@ -225,7 +224,7 @@ class App(tk.Tk):
         pageObj.pack(anchor=tk.NW, ipadx=self.width, ipady=self.width, padx=0, pady=0)
         return pageparentobj
 
-    def getHeader(self, text: str, parent: Page | ttk.Frame | FrameWithScrollBar, canKart=True,
+    def getHeader(self, text: str, parent, canKart=True,
                   removePlaceOrder=False) -> ttk.Frame:
         pageObj = ttk.Frame(master=parent)
         ttk.Button(
